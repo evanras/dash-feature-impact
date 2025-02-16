@@ -1,0 +1,11 @@
+include dash_feature_impact/dash_feature_impact.min.js
+include dash_feature_impact/dash_feature_impact.min.js.map
+include dash_feature_impact/async-*.js
+include dash_feature_impact/async-*.js.map
+include dash_feature_impact/*-shared.js
+include dash_feature_impact/*-shared.js.map
+include dash_feature_impact/metadata.json
+include dash_feature_impact/package-info.json
+include README.md
+include LICENSE
+include package.json
