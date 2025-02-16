@@ -1,0 +1,58 @@
+/* DashFeatureImpact.css */
+
+.dash-feature-impact {
+    display: flex;
+    flex-direction: row;
+    align-items: stretch;
+    background-color: white;
+    padding: 1rem;
+}
+
+/* Distribution section styles */
+.distribution-section {
+    flex: 0 0 auto;
+    margin-right: 1rem;
+}
+
+.section-header {
+    font-size: 0.875rem;
+    color: #4A5568;
+    margin-bottom: 0.5rem;
+}
+
+/* Force plot section styles */
+.force-plot-section {
+    flex: 0 0 auto;
+    margin-right: 1rem;
+}
+
+/* Table section styles */
+.table-section {
+    flex: 0 0 auto;
+}
+
+.table-header {
+    font-size: 0.875rem;
+    font-weight: 500;
+    margin-bottom: 0.5rem;
+    display: flex;
+}
+
+.table-header span {
+    margin-right: 1rem;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+    .dash-feature-impact {
+        flex-direction: column;
+    }
+
+    .distribution-section,
+    .force-plot-section,
+    .table-section {
+        width: 100% !important;
+        margin-right: 0;
+        margin-bottom: 1rem;
+    }
+}

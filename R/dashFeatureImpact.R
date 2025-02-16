@@ -1,9 +1,9 @@
 # AUTO GENERATED FILE - DO NOT EDIT
 
 #' @export
-dashFeatureImpact <- function(id=NULL, label=NULL, value=NULL) {
+dashFeatureImpact <- function(id=NULL, baseValue=NULL, colors=NULL, distributionData=NULL, features=NULL, finalPrediction=NULL, height=NULL, width=NULL) {
     
-    props <- list(id=id, label=label, value=value)
+    props <- list(id=id, baseValue=baseValue, colors=colors, distributionData=distributionData, features=features, finalPrediction=finalPrediction, height=height, width=width)
     if (length(props) > 0) {
         props <- props[!vapply(props, is.null, logical(1))]
     }
@@ -11,7 +11,7 @@ dashFeatureImpact <- function(id=NULL, label=NULL, value=NULL) {
         props = props,
         type = 'DashFeatureImpact',
         namespace = 'dash_feature_impact',
-        propNames = c('id', 'label', 'value'),
+        propNames = c('id', 'baseValue', 'colors', 'distributionData', 'features', 'finalPrediction', 'height', 'width'),
         package = 'dashFeatureImpact'
         )
 

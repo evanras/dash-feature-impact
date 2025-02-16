@@ -1,4 +1,10 @@
 # AUTO GENERATED FILE - DO NOT EDIT
 
 export(DashFeatureImpact)
+export(DistributionPlot)
+export(FeatureTable)
+export(ForceImpactPlot)
+export(featureTable)
 export(dashFeatureImpact)
+export(distributionPlot)
+export(forceImpactPlot)
