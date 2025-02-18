@@ -16,11 +16,11 @@ contributions = [
     {"id": "pop1", "value": 83.15},
     {"id": "my1", "value": 44.15},
     {"id": "ur1", "value": 37.02},
+    {"id": "gdp1", "value": 28.1},
+    {"id": "aof1", "value": 20.80},
     {"id": "ur2", "value": 0.65},
     {"id": "ur3", "value": 0.6},
     {"id": "ur4", "value": 0.06},
-    {"id": "gdp1", "value": 28.1},
-    {"id": "aof1", "value": 20.80}
 ]
 
 # Sample table data with matching IDs
@@ -65,11 +65,12 @@ style = {
 }
 
 # Dimensions configuration
+width = 1200
 dimensions = {
-    "width": 1200,
+    "width": width,
     "height": 400,
-    "kdePlotWidth": 300,
-    "forcePlotWidth": 400,
+    "kdePlotWidth": width * 0.25,
+    "forcePlotWidth": width * 0.33,
     "margins": {
         "top": 20,
         "right": 30,

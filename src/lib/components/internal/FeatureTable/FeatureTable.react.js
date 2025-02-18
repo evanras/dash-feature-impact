@@ -80,7 +80,7 @@ const FeatureTable = ({
         const scrollTop = tableBody.scrollTop;
         const clientHeight = tableBody.clientHeight;
         const headerHeight = 48; // Height of the header
-        const rowHeight = 40; // Height of each row
+        const rowHeight = 42; // Height of each row
     
         // Calculate visible rows
         const startIndex = Math.floor(scrollTop / rowHeight);
@@ -91,7 +91,7 @@ const FeatureTable = ({
             .map((row, index) => ({
                 index: startIndex + index,
                 // Include scroll position in y calculation
-                y: (headerHeight + ((startIndex + index) * rowHeight)) + rowHeight - scrollTop,
+                y: (headerHeight + ((startIndex + index) * rowHeight)) - scrollTop  + (rowHeight / 2),
                 x: tableBody.getBoundingClientRect().left
             }));
     

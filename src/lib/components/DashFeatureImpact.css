@@ -11,7 +11,11 @@
 
 .visualization-grid {
     display: grid;
-    grid-template-columns: var(--kde-width) var(--force-width) var(--connection-space) minmax(0, 1fr);
+    grid-template-columns: 
+        var(--kde-width) 
+        var(--force-width) 
+        minmax(20px, 2%) /* Connection space */
+        minmax(0, 1fr);
     height: 100%;
     width: 100%;
 }
