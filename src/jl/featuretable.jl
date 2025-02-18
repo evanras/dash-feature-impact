@@ -6,19 +6,22 @@ export featuretable
     featuretable(;kwargs...)
 
 A FeatureTable component.
-FeatureTable displays the details of each feature including its name,
-value, and contribution to the model's prediction.
+FeatureTable Component
+Displays feature data in a scrollable table with dynamic columns and interaction
 Keyword arguments:
-- `features` (required): Array of features with their details. features has the following type: Array of lists containing elements 'name', 'value', 'contribution'.
+- `data` (Array of Dicts; required)
+- `height` (Real; optional)
+- `hoveredId` (String; optional)
+- `idColumn` (String; required)
+- `style` (optional): . style has the following type: lists containing elements 'textColor', 'background', 'headerBackground', 'highlightBackground'.
 Those elements have the following types:
-  - `name` (String; required)
-  - `value` (Real | String; required)
-  - `contribution` (Real; required)s
-- `height` (Real | String; optional): Height of the table container
-- `width` (Real | String; optional): Width of the table container
+  - `textColor` (String; optional)
+  - `background` (String; optional)
+  - `headerBackground` (String; optional)
+  - `highlightBackground` (String; optional)
 """
 function featuretable(; kwargs...)
-        available_props = Symbol[:features, :height, :width]
+        available_props = Symbol[:data, :height, :hoveredId, :idColumn, :style]
         wild_props = Symbol[]
         return Component("featuretable", "FeatureTable", "dash_feature_impact", available_props, wild_props; kwargs...)
 end

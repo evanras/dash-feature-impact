@@ -1,11 +1,13 @@
 from .DashFeatureImpact import DashFeatureImpact
-from .DistributionPlot import DistributionPlot
+from .ConnectingLine import ConnectingLine
 from .FeatureTable import FeatureTable
-from .ForceImpactPlot import ForceImpactPlot
+from .ForcePlot import ForcePlot
+from .KDEPlot import KDEPlot
 
 __all__ = [
     "DashFeatureImpact",
-    "DistributionPlot",
+    "ConnectingLine",
     "FeatureTable",
-    "ForceImpactPlot"
+    "ForcePlot",
+    "KDEPlot"
 ]

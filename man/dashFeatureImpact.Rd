@@ -6,38 +6,38 @@
 \title{DashFeatureImpact component}
 
 \description{
-DashFeatureImpact is a component that visualizes ML model feature importance and their contributions to a prediction, combining distribution, force impact, and feature table visualizations.
+Main component for visualizing feature impacts from machine learning models. Combines KDE plot, force plot, and feature table with connecting elements.
 }
 
 \usage{
-dashFeatureImpact(id=NULL, baseValue=NULL, colors=NULL, distributionData=NULL,
-features=NULL, finalPrediction=NULL, height=NULL, width=NULL)
+dashFeatureImpact(contributions=NULL, dimensions=NULL, idColumn=NULL,
+kdeData=NULL, onClick=NULL, onHover=NULL, style=NULL,
+tableData=NULL)
 }
 
 \arguments{
-\item{id}{Character. The ID used to identify this component in Dash callbacks.}
-
-\item{baseValue}{Numeric. The model's base/average prediction value.}
-
-\item{colors}{Lists containing elements 'positive', 'negative', 'distribution'.
+\item{contributions}{List of lists containing elements 'id', 'value'.
 those elements have the following types:
-  - positive (character; optional)
-  - negative (character; optional)
-  - distribution (character; optional). Custom colors for visualization elements.}
+  - id (character; required)
+  - value (numeric; required)s. The contributions of features. Dict with keys 'id' and 'value' where 'id' is expected to match the 'idColumn' in 'tableData'.}
 
-\item{distributionData}{List of numerics. Array of prediction values used to create the distribution plot.}
+\item{dimensions}{Named list. Size configurations for components in the visual.}
 
-\item{features}{List of lists containing elements 'name', 'value', 'contribution'.
+\item{idColumn}{Character. Name of the column in 'tableData' that matches the 'id' field from 'contributions'}
+
+\item{kdeData}{Lists containing elements 'points', 'prediction', 'predictiondate'.
 those elements have the following types:
-  - name (character; required)
-  - value (numeric | character; required)
-  - contribution (numeric; required)s. Array of feature objects that contribute to the prediction.}
+  - points (list of list of numericss; required)
+  - prediction (numeric; required)
+  - predictiondate (optional). Data to build the KDE Plot from.}
 
-\item{finalPrediction}{Numeric. The final prediction value after all feature contributions.}
+\item{onClick}{}
 
-\item{height}{Numeric | character. Height of the component (number for pixels, string for \%, vh).}
+\item{onHover}{}
 
-\item{width}{Numeric | character. Width of the component (number for pixels, string for \%, vh).}
+\item{style}{Named list. Style components}
+
+\item{tableData}{List of named lists. Data to display in a tabular format to the rigth of the force plot.}
 }
 
 \value{named list of JSON elements corresponding to React.js properties and their values}

@@ -5,67 +5,61 @@ from dash.development.base_component import Component, _explicitize_args
 
 class DashFeatureImpact(Component):
     """A DashFeatureImpact component.
-DashFeatureImpact is a component that visualizes ML model feature importance
-and their contributions to a prediction, combining distribution, force impact,
-and feature table visualizations.
+Main component for visualizing feature impacts from machine learning models.
+Combines KDE plot, force plot, and feature table with connecting elements.
 
 Keyword arguments:
 
-- id (string; optional):
-    The ID used to identify this component in Dash callbacks.
+- contributions (list of dicts; required):
+    The contributions of features. Dict with keys 'id' and 'value'
+    where 'id' is expected to match the 'idColumn' in 'tableData'.
 
-- baseValue (number; required):
-    The model's base/average prediction value.
+    `contributions` is a list of dicts with keys:
 
-- colors (dict; default {    positive: '#4299E1',    negative: '#F56565',    distribution: '#A0AEC0'}):
-    Custom colors for visualization elements.
+    - id (string; required)
 
-    `colors` is a dict with keys:
+    - value (number; required)
 
-    - positive (string; optional)
+- dimensions (dict; optional):
+    Size configurations for components in the visual.
 
-    - negative (string; optional)
+- idColumn (string; required):
+    Name of the column in 'tableData' that matches the 'id' field from
+    'contributions'.
 
-    - distribution (string; optional)
+- kdeData (dict; required):
+    Data to build the KDE Plot from.
 
-- distributionData (list of numbers; required):
-    Array of prediction values used to create the distribution plot.
+    `kdeData` is a dict with keys:
 
-- features (list of dicts; required):
-    Array of feature objects that contribute to the prediction.
+    - points (list of list of numberss; required)
 
-    `features` is a list of dicts with keys:
+    - prediction (number; required)
 
-    - name (string; required)
+    - predictionDate (optional)
 
-    - value (number | string; required)
+- style (dict; optional):
+    Style components.
 
-    - contribution (number; required)
-
-- finalPrediction (number; required):
-    The final prediction value after all feature contributions.
-
-- height (number | string; default 600):
-    Height of the component (number for pixels, string for %, vh).
-
-- width (number | string; default '100%'):
-    Width of the component (number for pixels, string for %, vh)."""
+- tableData (list of dicts; required):
+    Data to display in a tabular format to the rigth of the force
+    plot."""
     _children_props = []
     _base_nodes = ['children']
     _namespace = 'dash_feature_impact'
     _type = 'DashFeatureImpact'
     @_explicitize_args
-    def __init__(self, id=Component.UNDEFINED, baseValue=Component.REQUIRED, features=Component.REQUIRED, distributionData=Component.REQUIRED, finalPrediction=Component.REQUIRED, colors=Component.UNDEFINED, width=Component.UNDEFINED, height=Component.UNDEFINED, **kwargs):
-        self._prop_names = ['id', 'baseValue', 'colors', 'distributionData', 'features', 'finalPrediction', 'height', 'width']
+    def __init__(self, contributions=Component.REQUIRED, tableData=Component.REQUIRED, idColumn=Component.REQUIRED, kdeData=Component.REQUIRED, style=Component.UNDEFINED, dimensions=Component.UNDEFINED, onHover=Component.UNDEFINED, onClick=Component.UNDEFINED, **kwargs):
+        self._prop_names = ['contributions', 'dimensions', 'idColumn', 'kdeData', 'style', 'tableData']
         self._valid_wildcard_attributes =            []
-        self.available_properties = ['id', 'baseValue', 'colors', 'distributionData', 'features', 'finalPrediction', 'height', 'width']
+        self.available_properties = ['contributions', 'dimensions', 'idColumn', 'kdeData', 'style', 'tableData']
         self.available_wildcard_properties =            []
         _explicit_args = kwargs.pop('_explicit_args')
         _locals = locals()
         _locals.update(kwargs)  # For wildcard attrs and excess named props
         args = {k: _locals[k] for k in _explicit_args}
 
-        for k in ['baseValue', 'distributionData', 'features', 'finalPrediction']:
+        for k in ['contributions', 'idColumn', 'kdeData', 'tableData']:
             if k not in args:
                 raise TypeError(
                     'Required argument `' + k + '` was not specified.')

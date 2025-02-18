@@ -1,58 +1,222 @@
-/* DashFeatureImpact.css */
+/* KDE Plot */
 
-.dash-feature-impact {
-    display: flex;
-    flex-direction: row;
-    align-items: stretch;
-    background-color: white;
-    padding: 1rem;
+.kde-plot {
+    width: 100%;
+    height: 100%;
 }
 
-/* Distribution section styles */
-.distribution-section {
-    flex: 0 0 auto;
-    margin-right: 1rem;
+.grid-line {
+    stroke-dasharray: 2,2;
+    stroke-opacity: 0.3;
 }
 
-.section-header {
-    font-size: 0.875rem;
-    color: #4A5568;
-    margin-bottom: 0.5rem;
+.axis-line {
+    stroke-width: 1;
 }
 
-/* Force plot section styles */
-.force-plot-section {
-    flex: 0 0 auto;
-    margin-right: 1rem;
+.tick-line {
+    stroke-width: 1;
 }
 
-/* Table section styles */
-.table-section {
-    flex: 0 0 auto;
+.tick-text {
+    font-size: 12px;
+    font-family: monospace;
 }
 
-.table-header {
-    font-size: 0.875rem;
-    font-weight: 500;
-    margin-bottom: 0.5rem;
-    display: flex;
+.density-area {
+    opacity: 0.8;
+    transition: opacity 0.2s ease;
 }
 
-.table-header span {
-    margin-right: 1rem;
+.density-area:hover {
+    opacity: 0.9;
+}
+
+.prediction-line {
+    stroke-width: 1;
+    stroke-dasharray: 4,4;
+    opacity: 0.6;
+}
+
+.prediction-point {
+    stroke-width: 2;
+    transition: all 0.2s ease;
+}
+
+.prediction-point:hover {
+    r: 6;
+    cursor: pointer;
+}
+
+/* ForcePlot */
+.force-plot-container {
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+}
+
+.force-plot-svg {
+    width: 100%;
+    height: 100%;
+}
+
+.segment {
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.segment:hover {
+    filter: brightness(0.95);
+}
+
+.segment.highlighted {
+    filter: brightness(0.9);
+}
+
+.segment-rect {
+    stroke: rgba(0, 0, 0, 0.1);
+    stroke-width: 1;
+    transition: all 0.3s ease;
+}
+
+.segment-rect.negative {
+    stroke: rgba(255, 0, 0, 0.1);
+}
+
+.segment-rect.positive {
+    stroke: rgba(0, 0, 255, 0.1);
+}
+
+/* Add subtle shadow effect for depth */
+.segment-rect {
+    filter: drop-shadow(0px 2px 3px rgba(0, 0, 0, 0.1));
+}
+
+/* Enhanced hover effects */
+.segment:hover .segment-rect {
+    filter: drop-shadow(0px 4px 6px rgba(0, 0, 0, 0.15));
 }
 
 /* Responsive adjustments */
 @media (max-width: 768px) {
-    .dash-feature-impact {
-        flex-direction: column;
+    .segment-rect {
+        stroke-width: 0.5;
     }
+}
 
-    .distribution-section,
-    .force-plot-section,
-    .table-section {
-        width: 100% !important;
-        margin-right: 0;
-        margin-bottom: 1rem;
-    }
+/* FeatureTable */
+.feature-table-container {
+    display: flex;
+    flex-direction: column;
+    border: 1px solid #e2e8f0;
+    border-radius: 4px;
+    overflow: hidden;
+    width: 100%;
+    flex: 1 1 auto;
+    min-width: 0;
+}
+
+.table-header {
+    position: sticky;
+    top: 0;
+    z-index: 10;
+    border-bottom: 1px solid #e2e8f0;
+    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
+}
+
+.header-row {
+    display: flex;
+    min-width: min-content;
+    padding-right: 8px; /* Account for scrollbar */
+}
+
+.header-cell {
+    padding: 12px 16px;
+    font-weight: 600;
+    font-size: 14px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.table-body {
+    overflow-y: auto;
+    overflow-x: auto;
+    min-height: 0;
+    width: 100%;
+    flex-grow: 1;
+}
+
+.table-row {
+    display: flex;
+    min-width: min-content;
+    border-bottom: 1px solid #e2e8f0;
+    transition: background-color 0.2s;
+    cursor: pointer;
+}
+
+.table-row:hover {
+    background-color: #f8fafc;
+}
+
+.table-row.highlighted {
+    background-color: #f1f5f9;
+}
+
+.table-cell {
+    padding: 12px 16px;
+    font-size: 14px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.table-cell.id-column {
+    font-family: monospace;
+}
+
+/* Scrollbar styling */
+.table-body::-webkit-scrollbar {
+    width: 8px;
+    height: 8px;
+}
+
+.table-body::-webkit-scrollbar-track {
+    background: #f1f5f9;
+    border-radius: 4px;
+}
+
+.table-body::-webkit-scrollbar-thumb {
+    background: #cbd5e1;
+    border-radius: 4px;
+}
+
+.table-body::-webkit-scrollbar-thumb:hover {
+    background: #94a3b8;
+}
+
+/* ConnectingLine */
+.connecting-line {
+    pointer-events: none; /* Prevents interfering with underlying elements */
+}
+
+.connection-path {
+    fill: none;
+    transition: stroke-width 0.2s ease;
+}
+
+.label-background {
+    stroke: currentColor;
+    stroke-width: 1;
+}
+
+.label-text {
+    font-family: monospace;
+    font-size: 14px;
+    user-select: none;
+}
+
+/* Optional hover effects could be added here */
+.connecting-line:hover .connection-path {
+    stroke-width: 2;
 }

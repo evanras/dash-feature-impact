@@ -25,7 +25,9 @@
   "license": "MIT",
   "dependencies": {
     "ramda": "^0.26.1",
-    "recharts": "^2.15.1"
+    "recharts": "^2.15.1",
+    "d3": "7.9.0",
+    "prop-types": "^15.8.1"
   },
   "devDependencies": {
     "@babel/core": "^7.22.1",

@@ -1,10 +1,14 @@
 # AUTO GENERATED FILE - DO NOT EDIT
 
 export(DashFeatureImpact)
-export(DistributionPlot)
+export(ConnectingLine)
 export(FeatureTable)
-export(ForceImpactPlot)
+export(ForcePlot)
+export(KDEPlot)
+export(kDEPlot)
 export(featureTable)
 export(dashFeatureImpact)
+export(connectingLine)
 export(distributionPlot)
 export(forceImpactPlot)
+export(forcePlot)

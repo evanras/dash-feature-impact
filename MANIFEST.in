@@ -6,6 +6,7 @@ include dash_feature_impact/*-shared.js
 include dash_feature_impact/*-shared.js.map
 include dash_feature_impact/metadata.json
 include dash_feature_impact/package-info.json
+include dash_feature_impact/DashFeatureImpact.css
 include README.md
 include LICENSE
 include package.json

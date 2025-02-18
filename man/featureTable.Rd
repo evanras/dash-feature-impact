@@ -6,25 +6,38 @@
 \title{FeatureTable component}
 
 \description{
-FeatureTable displays the details of each feature including its name, value, and contribution to the model's prediction.
+FeatureTable Component Displays feature data in a scrollable table with dynamic columns and interaction
 }
 
 \usage{
-featureTable(features=NULL, height=NULL, onScroll=NULL, width=NULL)
+featureTable(contributions=NULL, data=NULL, height=NULL, hoveredId=NULL,
+idColumn=NULL, onClick=NULL, onHover=NULL, onScroll=NULL,
+style=NULL)
 }
 
 \arguments{
-\item{features}{List of lists containing elements 'name', 'value', 'contribution'.
+\item{contributions}{}
+
+\item{data}{List of named lists. }
+
+\item{height}{Numeric. }
+
+\item{hoveredId}{Character. }
+
+\item{idColumn}{Character. }
+
+\item{onClick}{}
+
+\item{onHover}{}
+
+\item{onScroll}{}
+
+\item{style}{Lists containing elements 'textcolor', 'background', 'headerbackground', 'highlightbackground'.
 those elements have the following types:
-  - name (character; required)
-  - value (numeric | character; required)
-  - contribution (numeric; required)s. Array of features with their details}
-
-\item{height}{Numeric | character. Height of the table container}
-
-\item{onScroll}{Callback function for scroll position updates}
-
-\item{width}{Numeric | character. Width of the table container}
+  - textcolor (character; optional)
+  - background (character; optional)
+  - headerbackground (character; optional)
+  - highlightbackground (character; optional). }
 }
 
 \value{named list of JSON elements corresponding to React.js properties and their values}
