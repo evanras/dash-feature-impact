@@ -1,9 +1,9 @@
 # AUTO GENERATED FILE - DO NOT EDIT
 
 #' @export
-kDEPlot <- function(data=NULL, height=NULL, margins=NULL, style=NULL, width=NULL) {
+kDEPlot <- function(data=NULL, height=NULL, margins=NULL, onPredictionPointFound=NULL, predictionTooltip=NULL, style=NULL, width=NULL) {
     
-    props <- list(data=data, height=height, margins=margins, style=style, width=width)
+    props <- list(data=data, height=height, margins=margins, onPredictionPointFound=onPredictionPointFound, predictionTooltip=predictionTooltip, style=style, width=width)
     if (length(props) > 0) {
         props <- props[!vapply(props, is.null, logical(1))]
     }
@@ -11,7 +11,7 @@ kDEPlot <- function(data=NULL, height=NULL, margins=NULL, style=NULL, width=NULL
         props = props,
         type = 'KDEPlot',
         namespace = 'dash_feature_impact',
-        propNames = c('data', 'height', 'margins', 'style', 'width'),
+        propNames = c('data', 'height', 'margins', 'onPredictionPointFound', 'predictionTooltip', 'style', 'width'),
         package = 'dashFeatureImpact'
         )
 

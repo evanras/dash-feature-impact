@@ -6,8 +6,7 @@ from dash.development.base_component import Component, _explicitize_args
 class KDEPlot(Component):
     """A KDEPlot component.
 KDEPlot Component
-Renders a kernel density estimation plot showing the distribution of predictions
-with the current prediction highlighted.
+Renders a kernel density estimation plot with a tooltip that can break out of containers
 
 Keyword arguments:
 
@@ -33,11 +32,15 @@ Keyword arguments:
 
     - left (number; optional)
 
+- predictionTooltip (string | a list of or a singular dash component, string or number; optional)
+
 - style (dict; optional)
 
     `style` is a dict with keys:
 
     - areaColor (string; optional)
+
+    - areaStroke (string; optional)
 
     - predictionColor (string; optional)
 
@@ -48,15 +51,15 @@ Keyword arguments:
     - background (string; optional)
 
 - width (number; default 300)"""
-    _children_props = []
-    _base_nodes = ['children']
+    _children_props = ['predictionTooltip']
+    _base_nodes = ['predictionTooltip', 'children']
     _namespace = 'dash_feature_impact'
     _type = 'KDEPlot'
     @_explicitize_args
-    def __init__(self, data=Component.REQUIRED, width=Component.UNDEFINED, height=Component.UNDEFINED, margins=Component.UNDEFINED, style=Component.UNDEFINED, **kwargs):
-        self._prop_names = ['data', 'height', 'margins', 'style', 'width']
+    def __init__(self, data=Component.REQUIRED, width=Component.UNDEFINED, height=Component.UNDEFINED, onPredictionPointFound=Component.UNDEFINED, predictionTooltip=Component.UNDEFINED, margins=Component.UNDEFINED, style=Component.UNDEFINED, **kwargs):
+        self._prop_names = ['data', 'height', 'margins', 'predictionTooltip', 'style', 'width']
         self._valid_wildcard_attributes =            []
-        self.available_properties = ['data', 'height', 'margins', 'style', 'width']
+        self.available_properties = ['data', 'height', 'margins', 'predictionTooltip', 'style', 'width']
         self.available_wildcard_properties =            []
         _explicit_args = kwargs.pop('_explicit_args')
         _locals = locals()

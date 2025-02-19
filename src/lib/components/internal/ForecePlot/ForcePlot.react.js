@@ -11,6 +11,7 @@ const ForcePlot = ({
     height = 600,
     style = {},
     hoveredId = null,
+    notchHeight,
     onTransitionPointFound,
     onSegmentPositionsUpdate,
     onHover,
@@ -21,7 +22,6 @@ const ForcePlot = ({
     const TRANSITION_GAP = 45;
     const BASE_GAP = 5;
     const SEGMENT_WIDTH = Math.min(width * 0.3, 80); // Responsive segment width
-    const NOTCH_HEIGHT = 15;
 
     // Calculate scaling factors and positions
     const calculations = React.useMemo(() => {
@@ -65,7 +65,6 @@ const ForcePlot = ({
         const isNegative = value < 0;
         
         const notchWidth = SEGMENT_WIDTH / 2;
-        const notchHeight = NOTCH_HEIGHT
         
         return [
             `M ${xCenter - SEGMENT_WIDTH/2} ${startY}`,
@@ -201,6 +200,7 @@ ForcePlot.propTypes = {
         background: PropTypes.string
     }),
     hoveredId: PropTypes.string,
+    notchHeight: PropTypes.number,
     onTransitionPointFound: PropTypes.func,
     onSegmentPositionsUpdate: PropTypes.func,
     onHover: PropTypes.func,

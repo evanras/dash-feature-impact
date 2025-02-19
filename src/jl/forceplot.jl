@@ -15,6 +15,7 @@ Those elements have the following types:
   - `value` (Real; required)s
 - `height` (Real; optional)
 - `hoveredId` (String; optional)
+- `notchHeight` (Real; optional)
 - `style` (optional): . style has the following type: lists containing elements 'positive', 'negative', 'background'.
 Those elements have the following types:
   - `positive` (String; optional)
@@ -23,7 +24,7 @@ Those elements have the following types:
 - `width` (Real; optional)
 """
 function forceplot(; kwargs...)
-        available_props = Symbol[:data, :height, :hoveredId, :style, :width]
+        available_props = Symbol[:data, :height, :hoveredId, :notchHeight, :style, :width]
         wild_props = Symbol[]
         return Component("forceplot", "ForcePlot", "dash_feature_impact", available_props, wild_props; kwargs...)
 end

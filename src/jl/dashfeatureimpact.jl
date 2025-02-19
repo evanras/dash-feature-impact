@@ -20,11 +20,12 @@ Those elements have the following types:
   - `points` (Array of Array of Realss; required)
   - `prediction` (Real; required)
   - `predictionDate` (optional)
+- `predictionTooltip` (String; optional): Text to display in the line connecting the prediction point to Force Plot
 - `style` (Dict; optional): Style components
 - `tableData` (Array of Dicts; required): Data to display in a tabular format to the rigth of the force plot.
 """
 function dashfeatureimpact(; kwargs...)
-        available_props = Symbol[:contributions, :dimensions, :idColumn, :kdeData, :style, :tableData]
+        available_props = Symbol[:contributions, :dimensions, :idColumn, :kdeData, :predictionTooltip, :style, :tableData]
         wild_props = Symbol[]
         return Component("dashfeatureimpact", "DashFeatureImpact", "dash_feature_impact", available_props, wild_props; kwargs...)
 end

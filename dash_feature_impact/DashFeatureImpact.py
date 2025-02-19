@@ -38,6 +38,10 @@ Keyword arguments:
 
     - predictionDate (optional)
 
+- predictionTooltip (string; optional):
+    Text to display in the line connecting the prediction point to
+    Force Plot.
+
 - style (dict; optional):
     Style components.
 
@@ -49,10 +53,10 @@ Keyword arguments:
     _namespace = 'dash_feature_impact'
     _type = 'DashFeatureImpact'
     @_explicitize_args
-    def __init__(self, contributions=Component.REQUIRED, tableData=Component.REQUIRED, idColumn=Component.REQUIRED, kdeData=Component.REQUIRED, style=Component.UNDEFINED, dimensions=Component.UNDEFINED, onHover=Component.UNDEFINED, onClick=Component.UNDEFINED, **kwargs):
-        self._prop_names = ['contributions', 'dimensions', 'idColumn', 'kdeData', 'style', 'tableData']
+    def __init__(self, contributions=Component.REQUIRED, tableData=Component.REQUIRED, idColumn=Component.REQUIRED, kdeData=Component.REQUIRED, predictionTooltip=Component.UNDEFINED, style=Component.UNDEFINED, dimensions=Component.UNDEFINED, onHover=Component.UNDEFINED, onClick=Component.UNDEFINED, **kwargs):
+        self._prop_names = ['contributions', 'dimensions', 'idColumn', 'kdeData', 'predictionTooltip', 'style', 'tableData']
         self._valid_wildcard_attributes =            []
-        self.available_properties = ['contributions', 'dimensions', 'idColumn', 'kdeData', 'style', 'tableData']
+        self.available_properties = ['contributions', 'dimensions', 'idColumn', 'kdeData', 'predictionTooltip', 'style', 'tableData']
         self.available_wildcard_properties =            []
         _explicit_args = kwargs.pop('_explicit_args')
         _locals = locals()

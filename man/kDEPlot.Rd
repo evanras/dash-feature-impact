@@ -6,11 +6,13 @@
 \title{KDEPlot component}
 
 \description{
-KDEPlot Component Renders a kernel density estimation plot showing the distribution of predictions with the current prediction highlighted.
+KDEPlot Component Renders a kernel density estimation plot with a tooltip that can break out of containers
 }
 
 \usage{
-kDEPlot(data=NULL, height=NULL, margins=NULL, style=NULL, width=NULL)
+kDEPlot(data=NULL, height=NULL, margins=NULL,
+onPredictionPointFound=NULL, predictionTooltip=NULL,
+style=NULL, width=NULL)
 }
 
 \arguments{
@@ -28,9 +30,14 @@ those elements have the following types:
   - bottom (numeric; optional)
   - left (numeric; optional). }
 
-\item{style}{Lists containing elements 'areacolor', 'predictioncolor', 'gridcolor', 'textcolor', 'background'.
+\item{onPredictionPointFound}{}
+
+\item{predictionTooltip}{Character | a list of or a singular dash component, string or number. }
+
+\item{style}{Lists containing elements 'areacolor', 'areastroke', 'predictioncolor', 'gridcolor', 'textcolor', 'background'.
 those elements have the following types:
   - areacolor (character; optional)
+  - areastroke (character; optional)
   - predictioncolor (character; optional)
   - gridcolor (character; optional)
   - textcolor (character; optional)

@@ -7,8 +7,7 @@ export kdeplot
 
 A KDEPlot component.
 KDEPlot Component
-Renders a kernel density estimation plot showing the distribution of predictions
-with the current prediction highlighted.
+Renders a kernel density estimation plot with a tooltip that can break out of containers
 Keyword arguments:
 - `data` (required): . data has the following type: lists containing elements 'points', 'prediction'.
 Those elements have the following types:
@@ -21,9 +20,11 @@ Those elements have the following types:
   - `right` (Real; optional)
   - `bottom` (Real; optional)
   - `left` (Real; optional)
-- `style` (optional): . style has the following type: lists containing elements 'areaColor', 'predictionColor', 'gridColor', 'textColor', 'background'.
+- `predictionTooltip` (String | a list of or a singular dash component, string or number; optional)
+- `style` (optional): . style has the following type: lists containing elements 'areaColor', 'areaStroke', 'predictionColor', 'gridColor', 'textColor', 'background'.
 Those elements have the following types:
   - `areaColor` (String; optional)
+  - `areaStroke` (String; optional)
   - `predictionColor` (String; optional)
   - `gridColor` (String; optional)
   - `textColor` (String; optional)
@@ -31,7 +32,7 @@ Those elements have the following types:
 - `width` (Real; optional)
 """
 function kdeplot(; kwargs...)
-        available_props = Symbol[:data, :height, :margins, :style, :width]
+        available_props = Symbol[:data, :height, :margins, :predictionTooltip, :style, :width]
         wild_props = Symbol[]
         return Component("kdeplot", "KDEPlot", "dash_feature_impact", available_props, wild_props; kwargs...)
 end

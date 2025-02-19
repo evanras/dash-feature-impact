@@ -22,6 +22,8 @@ Keyword arguments:
 
 - hoveredId (string; optional)
 
+- notchHeight (number; optional)
+
 - style (dict; optional)
 
     `style` is a dict with keys:
@@ -38,10 +40,10 @@ Keyword arguments:
     _namespace = 'dash_feature_impact'
     _type = 'ForcePlot'
     @_explicitize_args
-    def __init__(self, data=Component.REQUIRED, width=Component.UNDEFINED, height=Component.UNDEFINED, style=Component.UNDEFINED, hoveredId=Component.UNDEFINED, onTransitionPointFound=Component.UNDEFINED, onSegmentPositionsUpdate=Component.UNDEFINED, onHover=Component.UNDEFINED, onClick=Component.UNDEFINED, **kwargs):
-        self._prop_names = ['data', 'height', 'hoveredId', 'style', 'width']
+    def __init__(self, data=Component.REQUIRED, width=Component.UNDEFINED, height=Component.UNDEFINED, style=Component.UNDEFINED, hoveredId=Component.UNDEFINED, notchHeight=Component.UNDEFINED, onTransitionPointFound=Component.UNDEFINED, onSegmentPositionsUpdate=Component.UNDEFINED, onHover=Component.UNDEFINED, onClick=Component.UNDEFINED, **kwargs):
+        self._prop_names = ['data', 'height', 'hoveredId', 'notchHeight', 'style', 'width']
         self._valid_wildcard_attributes =            []
-        self.available_properties = ['data', 'height', 'hoveredId', 'style', 'width']
+        self.available_properties = ['data', 'height', 'hoveredId', 'notchHeight', 'style', 'width']
         self.available_wildcard_properties =            []
         _explicit_args = kwargs.pop('_explicit_args')
         _locals = locals()

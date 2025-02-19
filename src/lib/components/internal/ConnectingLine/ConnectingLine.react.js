@@ -76,15 +76,6 @@ const ConnectingLine = ({
             {/* Tooltip/label if provided */}
             {tooltipContent && pathData.labelPosition && (
                 <g transform={`translate(${pathData.labelPosition.x}, ${pathData.labelPosition.y})`}>
-                    <rect
-                        x={-35}
-                        y={-12}
-                        width={70}
-                        height={24}
-                        rx={4}
-                        className="label-background"
-                        style={{ fill: style.background }}
-                    />
                     <text
                         className="label-text"
                         textAnchor="middle"

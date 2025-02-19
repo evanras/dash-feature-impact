@@ -11,8 +11,8 @@ Main component for visualizing feature impacts from machine learning models. Com
 
 \usage{
 dashFeatureImpact(contributions=NULL, dimensions=NULL, idColumn=NULL,
-kdeData=NULL, onClick=NULL, onHover=NULL, style=NULL,
-tableData=NULL)
+kdeData=NULL, onClick=NULL, onHover=NULL,
+predictionTooltip=NULL, style=NULL, tableData=NULL)
 }
 
 \arguments{
@@ -34,6 +34,8 @@ those elements have the following types:
 \item{onClick}{}
 
 \item{onHover}{}
+
+\item{predictionTooltip}{Character. Text to display in the line connecting the prediction point to Force Plot}
 
 \item{style}{Named list. Style components}
 

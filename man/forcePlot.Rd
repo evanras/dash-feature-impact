@@ -10,8 +10,8 @@ ForcePlot component visualizes feature contributions as stacked segments,  with 
 }
 
 \usage{
-forcePlot(data=NULL, height=NULL, hoveredId=NULL, onClick=NULL,
-onHover=NULL, onSegmentPositionsUpdate=NULL,
+forcePlot(data=NULL, height=NULL, hoveredId=NULL, notchHeight=NULL,
+onClick=NULL, onHover=NULL, onSegmentPositionsUpdate=NULL,
 onTransitionPointFound=NULL, style=NULL, width=NULL)
 }
 
@@ -24,6 +24,8 @@ those elements have the following types:
 \item{height}{Numeric. }
 
 \item{hoveredId}{Character. }
+
+\item{notchHeight}{Numeric. }
 
 \item{onClick}{}
 

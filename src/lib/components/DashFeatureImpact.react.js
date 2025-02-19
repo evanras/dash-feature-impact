@@ -17,6 +17,7 @@ const DashFeatureImpact = ({
     kdeData,
     style = {},
     dimensions = {},
+    predictionTooltip,
     onHover,
     onClick,
     setProps
@@ -25,6 +26,8 @@ const DashFeatureImpact = ({
     const [segmentPositions, setSegmentPositions] = React.useState([]);
     const [visibleRows, setVisibleRows] = React.useState([]);
     const [hoveredId, setHoveredId] = React.useState(null);
+    const [predictionPosition, setPredicitonPosition] = React.useState(null)
+    const NOTCH_HEIGHT = 15
 
     // Get default dimensions
     const {
@@ -82,6 +85,8 @@ const DashFeatureImpact = ({
                         data={kdeData}
                         width={kdePlotWidth}
                         height={height}
+                        predictionTooltip={predictionTooltip}
+                        onPredictionPointFound={setPredicitonPosition}
                         margins={margins}
                         style={colors}
                     />
@@ -93,6 +98,7 @@ const DashFeatureImpact = ({
                         width={forcePlotWidth}
                         height={height}
                         style={colors}
+                        notchHeight={NOTCH_HEIGHT}
                         onTransitionPointFound={setTransitionPoint}
                         onSegmentPositionsUpdate={setSegmentPositions}
                         onHover={handleHover}
@@ -119,23 +125,24 @@ const DashFeatureImpact = ({
             {/* Connections overlay */}
             <svg className="connections-overlay" width={width} height={height}>
                 {/* KDE to Force Plot connection */}
-                {transitionPoint && (
+                {/* {transitionPoint && (
                     <ConnectingLine
                         start={{
-                            x: kdePlotWidth - margins.right,
-                            y: height / 2
+                            x: predictionPosition.x + 8,
+                            y: predictionPosition.y
                         }}
                         end={{
                             x: transitionPoint.x + kdePlotWidth,
-                            y: transitionPoint.y
+                            y: transitionPoint.y + NOTCH_HEIGHT + 8
                         }}
                         pathStyle="kde-to-force"
+                        tooltipContent={predictionLabel}
                         style={{
                             stroke: colors.connecting,
                             background: colors.background
                         }}
                     />
-                )}
+                )} */}
 
                 {/* Force Plot to Table connections */}
                 {segmentPositions.map((segment, index) => {
@@ -196,6 +203,9 @@ DashFeatureImpact.propTypes = {
         prediction: PropTypes.number.isRequired,
         predictionDate: PropTypes.instanceOf(Date)
     }).isRequired,
+
+    /** Text to display in the line connecting the prediction point to Force Plot */
+    predictionTooltip: PropTypes.string,
 
     /** Style components */
     style: PropTypes.object,

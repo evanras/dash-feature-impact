@@ -39,6 +39,8 @@ table_data = [
     {"id": "ur4", "name": "4 Unemployment Rate", "value": 4.06}
 ]
 
+predict_val = 312.4
+
 # KDE plot data
 kde_data = {
     "points": [
@@ -49,7 +51,7 @@ kde_data = {
         [400, 0.3],
         [500, 0]
     ],
-    "prediction": 89.24,
+    "prediction": predict_val,
     # "predictionDate": datetime(2024, 4, 14)
 }
 
@@ -60,12 +62,13 @@ style = {
         "negative": "#F56565",  # Red
         "connecting": "#666666",
         "background": "#FFFFFF",
-        "text": "#333333"
-    }
+        "text": "#333333",
+        "predictionColor": "gray"
+    },
 }
 
 # Dimensions configuration
-width = 600
+width = 1200
 dimensions = {
     "width": width,
     "height": 400,
@@ -82,25 +85,31 @@ dimensions = {
 # App layout
 app.layout = html.Div([
     # html.H1("Feature Impact Visualization Example"),
-    
-    dash_feature_impact.DashFeatureImpact(
-        # id='feature-impact-1',
-        contributions=contributions,
-        tableData=table_data,
-        idColumn="id",
-        kdeData=kde_data,
-        style=style,
-        dimensions=dimensions
+    html.Div(
+        children=[
+            html.Div("Hello there"),
+            dash_feature_impact.DashFeatureImpact(
+                # id='feature-impact-1',
+                contributions=contributions,
+                tableData=table_data,
+                idColumn="id",
+                kdeData=kde_data,
+                predictionTooltip=f"Predicted value of {predict_val} on April 25th, 2024",
+                style=style,
+                dimensions=dimensions
+            ),
+        ]
     ),
-    
-    # html.Div([
-    #     html.H3("Component Details:"),
-    #     html.Ul([
-    #         html.Li(f"Number of Features: {len(contributions)}"),
-    #         html.Li(f"Prediction Value: {kde_data['prediction']}"),
-    #         # html.Li(f"Prediction Date: {kde_data['predictionDate']}")
-    #     ])
-    # ], style={'margin-top': '20px'})
+    # dash_feature_impact.DashFeatureImpact(
+    #     # id='feature-impact-1',
+    #     contributions=contributions,
+    #     tableData=table_data,
+    #     idColumn="id",
+    #     kdeData=kde_data,
+    #     predictionTooltip=f"Predicted value of {predict_val} on April 25th, 2024",
+    #     style=style,
+    #     dimensions=dimensions
+    # ),
 ])
 
 if __name__ == '__main__':

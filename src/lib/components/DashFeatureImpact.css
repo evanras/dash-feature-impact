@@ -308,3 +308,9 @@
 .connecting-line:hover .connection-path {
     stroke-width: 2;
 }
+
+.prediction-tooltip {
+    overflow: visible;
+    white-space: no-wrap;
+    z-index: 20;
+}
