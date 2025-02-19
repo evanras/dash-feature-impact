@@ -10,7 +10,6 @@ const KDEPlot = ({
     data,
     width = 300,
     height = 600,
-    onPredictionPointFound,
     predictionTooltip,
     margins = {
         top: 20,
@@ -85,16 +84,6 @@ const KDEPlot = ({
             }
         };
     }, [data, innerWidth, innerHeight]);
-
-    // Update prediction position info
-    React.useEffect(() => {
-        if (onPredictionPointFound) {
-            onPredictionPointFound({
-                x: plotData.predictionPoint.x + margins.left,
-                y: plotData.predictionPoint.y + margins.top
-            });
-        }
-    }, [plotData.predictionPoint, onPredictionPointFound, margins]);
 
     // Calculate tooltip position using window coordinates
     const updateTooltipPosition = React.useCallback(() => {
@@ -322,7 +311,6 @@ KDEPlot.propTypes = {
     }).isRequired,
     width: PropTypes.number,
     height: PropTypes.number,
-    onPredictionPointFound: PropTypes.func,
     predictionTooltip: PropTypes.oneOfType([PropTypes.string, PropTypes.node]),
     margins: PropTypes.shape({
         top: PropTypes.number,

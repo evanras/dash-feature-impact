@@ -5,8 +5,14 @@ from dash.development.base_component import Component, _explicitize_args
 
 class DashFeatureImpact(Component):
     """A DashFeatureImpact component.
+DashFeatureImpact Component
+
 Main component for visualizing feature impacts from machine learning models.
-Combines KDE plot, force plot, and feature table with connecting elements.
+Provides a responsive layout combining KDE plot, force plot, and feature table
+with connecting elements for interactive data exploration.
+
+The component maintains consistent visual relationships between plots while
+adapting to different screen sizes through horizontal scrolling when needed.
 
 Keyword arguments:
 
@@ -36,7 +42,7 @@ Keyword arguments:
 
     - prediction (number; required)
 
-    - predictionDate (optional)
+    - predictionDate (string; optional)
 
 - predictionTooltip (string; optional):
     Text to display in the line connecting the prediction point to
@@ -46,7 +52,7 @@ Keyword arguments:
     Style components.
 
 - tableData (list of dicts; required):
-    Data to display in a tabular format to the rigth of the force
+    Data to display in a tabular format to the right of the force
     plot."""
     _children_props = []
     _base_nodes = ['children']

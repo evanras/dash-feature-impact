@@ -56,7 +56,7 @@ Keyword arguments:
     _namespace = 'dash_feature_impact'
     _type = 'KDEPlot'
     @_explicitize_args
-    def __init__(self, data=Component.REQUIRED, width=Component.UNDEFINED, height=Component.UNDEFINED, onPredictionPointFound=Component.UNDEFINED, predictionTooltip=Component.UNDEFINED, margins=Component.UNDEFINED, style=Component.UNDEFINED, **kwargs):
+    def __init__(self, data=Component.REQUIRED, width=Component.UNDEFINED, height=Component.UNDEFINED, predictionTooltip=Component.UNDEFINED, margins=Component.UNDEFINED, style=Component.UNDEFINED, **kwargs):
         self._prop_names = ['data', 'height', 'margins', 'predictionTooltip', 'style', 'width']
         self._valid_wildcard_attributes =            []
         self.available_properties = ['data', 'height', 'margins', 'predictionTooltip', 'style', 'width']

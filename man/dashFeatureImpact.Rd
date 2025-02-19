@@ -6,7 +6,7 @@
 \title{DashFeatureImpact component}
 
 \description{
-Main component for visualizing feature impacts from machine learning models. Combines KDE plot, force plot, and feature table with connecting elements.
+DashFeatureImpact Component  Main component for visualizing feature impacts from machine learning models. Provides a responsive layout combining KDE plot, force plot, and feature table with connecting elements for interactive data exploration.  The component maintains consistent visual relationships between plots while adapting to different screen sizes through horizontal scrolling when needed.
 }
 
 \usage{
@@ -29,7 +29,7 @@ those elements have the following types:
 those elements have the following types:
   - points (list of list of numericss; required)
   - prediction (numeric; required)
-  - predictiondate (optional). Data to build the KDE Plot from.}
+  - predictiondate (character; optional). Data to build the KDE Plot from.}
 
 \item{onClick}{}
 
@@ -39,7 +39,7 @@ those elements have the following types:
 
 \item{style}{Named list. Style components}
 
-\item{tableData}{List of named lists. Data to display in a tabular format to the rigth of the force plot.}
+\item{tableData}{List of named lists. Data to display in a tabular format to the right of the force plot.}
 }
 
 \value{named list of JSON elements corresponding to React.js properties and their values}

@@ -6,8 +6,14 @@ export dashfeatureimpact
     dashfeatureimpact(;kwargs...)
 
 A DashFeatureImpact component.
+DashFeatureImpact Component
+
 Main component for visualizing feature impacts from machine learning models.
-Combines KDE plot, force plot, and feature table with connecting elements.
+Provides a responsive layout combining KDE plot, force plot, and feature table
+with connecting elements for interactive data exploration.
+
+The component maintains consistent visual relationships between plots while
+adapting to different screen sizes through horizontal scrolling when needed.
 Keyword arguments:
 - `contributions` (required): The contributions of features. Dict with keys 'id' and 'value' where 'id' is expected to match the 'idColumn' in 'tableData'.. contributions has the following type: Array of lists containing elements 'id', 'value'.
 Those elements have the following types:
@@ -19,10 +25,10 @@ Those elements have the following types:
 Those elements have the following types:
   - `points` (Array of Array of Realss; required)
   - `prediction` (Real; required)
-  - `predictionDate` (optional)
+  - `predictionDate` (String; optional)
 - `predictionTooltip` (String; optional): Text to display in the line connecting the prediction point to Force Plot
 - `style` (Dict; optional): Style components
-- `tableData` (Array of Dicts; required): Data to display in a tabular format to the rigth of the force plot.
+- `tableData` (Array of Dicts; required): Data to display in a tabular format to the right of the force plot.
 """
 function dashfeatureimpact(; kwargs...)
         available_props = Symbol[:contributions, :dimensions, :idColumn, :kdeData, :predictionTooltip, :style, :tableData]

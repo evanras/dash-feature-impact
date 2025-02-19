@@ -11,8 +11,7 @@ KDEPlot Component Renders a kernel density estimation plot with a tooltip that c
 
 \usage{
 kDEPlot(data=NULL, height=NULL, margins=NULL,
-onPredictionPointFound=NULL, predictionTooltip=NULL,
-style=NULL, width=NULL)
+predictionTooltip=NULL, style=NULL, width=NULL)
 }
 
 \arguments{
@@ -29,8 +28,6 @@ those elements have the following types:
   - right (numeric; optional)
   - bottom (numeric; optional)
   - left (numeric; optional). }
-
-\item{onPredictionPointFound}{}
 
 \item{predictionTooltip}{Character | a list of or a singular dash component, string or number. }
 

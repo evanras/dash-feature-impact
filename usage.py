@@ -68,12 +68,12 @@ style = {
 }
 
 # Dimensions configuration
-width = 1200
+width = 800
 dimensions = {
     "width": width,
-    "height": 400,
+    "height": 300,
     "kdePlotWidth": width * 0.25,
-    "forcePlotWidth": width * 0.33,  # proportions other than these can cause breaks in lines 
+    "forcePlotWidth": width * 0.2,  # proportions other than these can cause breaks in lines 
     "margins": {
         "top": 20,
         "right": 30,
@@ -96,7 +96,7 @@ app.layout = html.Div([
                 kdeData=kde_data,
                 predictionTooltip=f"Predicted value of {predict_val} on April 25th, 2024",
                 style=style,
-                dimensions=dimensions
+                # dimensions=dimensions
             ),
         ]
     ),

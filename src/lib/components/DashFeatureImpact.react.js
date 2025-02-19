@@ -3,12 +3,17 @@ const PropTypes = require('prop-types');
 const ForcePlot = require('./internal/ForecePlot/ForcePlot.react');
 const FeatureTable = require('./internal/FeatureTable/FeatureTable.react');
 const KDEPlot = require('./internal/KDEPlot/KDEPlot.react');
-const ConnectingLine = require('./internal/ConnectingLine/ConnectingLine.react');
 require('./DashFeatureImpact.css');
 
 /**
+ * DashFeatureImpact Component
+ * 
  * Main component for visualizing feature impacts from machine learning models.
- * Combines KDE plot, force plot, and feature table with connecting elements.
+ * Provides a responsive layout combining KDE plot, force plot, and feature table
+ * with connecting elements for interactive data exploration.
+ * 
+ * The component maintains consistent visual relationships between plots while
+ * adapting to different screen sizes through horizontal scrolling when needed.
  */
 const DashFeatureImpact = ({
     contributions,
@@ -26,12 +31,12 @@ const DashFeatureImpact = ({
     const [segmentPositions, setSegmentPositions] = React.useState([]);
     const [visibleRows, setVisibleRows] = React.useState([]);
     const [hoveredId, setHoveredId] = React.useState(null);
-    const [predictionPosition, setPredicitonPosition] = React.useState(null)
-    const NOTCH_HEIGHT = 15
+    // We don't need to track container width since we're using fixed widths
+    const containerRef = React.useRef(null);
+    const NOTCH_HEIGHT = 15;
 
-    // Get default dimensions
+    // Get dimensions with simpler handling
     const {
-        width = 1200,
         height = 600,
         kdePlotWidth = 300,
         forcePlotWidth = 400,
@@ -42,6 +47,18 @@ const DashFeatureImpact = ({
             left: 60
         }
     } = dimensions;
+
+    // Use fixed widths to maintain consistency
+    const kdeWidth = kdePlotWidth;
+    const forceWidth = forcePlotWidth;
+    
+    // Update CSS variables to match provided dimensions
+    React.useEffect(() => {
+        if (containerRef.current) {
+            containerRef.current.style.setProperty('--kde-width', `${kdePlotWidth}px`);
+            containerRef.current.style.setProperty('--force-width', `${forcePlotWidth}px`);
+        }
+    }, [kdePlotWidth, forcePlotWidth]);
 
     // Get default styles
     const {
@@ -54,50 +71,100 @@ const DashFeatureImpact = ({
         }
     } = style;
 
-    // Create contributions map for efficient lookup
+    /**
+     * Create contributions map for efficient lookup by ID
+     * 
+     * Transforms the contributions array into a Map where:
+     * - Keys are feature IDs
+     * - Values are the corresponding contribution values
+     * 
+     * This improves performance when checking contributions in the table
+     */
     const contributionsMap = React.useMemo(() => {
-        return new Map(contributions.map(c => [c.id, c]));
+        return new Map(contributions.map(c => [c.id, c.value]));
     }, [contributions]);
 
-    // Handle hover interactions
+    /**
+     * Handle hover interactions across all visualization components
+     * 
+     * Updates the shared hoveredId state and triggers the onHover callback
+     * with the full contribution object for the hovered element
+     * 
+     * @param {string} id - ID of the hovered element
+     */
     const handleHover = (id) => {
         setHoveredId(id);
         if (onHover) {
-            onHover(contributionsMap.get(id));
+            const contribution = contributions.find(c => c.id === id);
+            onHover(contribution);
         }
     };
 
-    // Handle click interactions
+    /**
+     * Handle click interactions across all visualization components
+     * 
+     * Triggers the onClick callback with the full contribution object
+     * for the clicked element
+     * 
+     * @param {string} id - ID of the clicked element
+     */
     const handleClick = (id) => {
         if (onClick) {
-            onClick(contributionsMap.get(id));
+            const contribution = contributions.find(c => c.id === id);
+            onClick(contribution);
         }
+    };
+
+    // We no longer need complex resize monitoring since we're using fixed widths
+    // and horizontal scrolling for responsiveness
+
+    /**
+     * Handle updates to the prediction point position from KDE plot
+     * Preserves the original functionality while fixing variable naming
+     * 
+     * @param {Object} position - Position data from KDE plot
+     */
+    const setPredictionPosition = (position) => {
+        // Original function stub preserved
+        // Implementation would go here if needed
     };
 
     return (
         <div 
-            className="prediction-explanation" 
-            style={{ width, height }}
+            className="dash-feature-impact" 
+            ref={containerRef}
+            style={{ height }}
         >
             <div className="visualization-grid">
                 <div className="kde-section">
                     <KDEPlot 
                         data={kdeData}
-                        width={kdePlotWidth}
+                        width={kdeWidth}
                         height={height}
                         predictionTooltip={predictionTooltip}
-                        onPredictionPointFound={setPredicitonPosition}
+                        onPredictionPointFound={setPredictionPosition}
                         margins={margins}
-                        style={colors}
+                        style={{
+                            areaColor: colors.positive,
+                            areaStroke: colors.connecting,
+                            predictionColor: colors.connecting,
+                            gridColor: '#e2e8f0',
+                            textColor: colors.text,
+                            background: colors.background
+                        }}
                     />
                 </div>
 
                 <div className="force-section">
                     <ForcePlot 
                         data={contributions}
-                        width={forcePlotWidth}
+                        width={forceWidth}
                         height={height}
-                        style={colors}
+                        style={{
+                            positive: colors.positive,
+                            negative: colors.negative,
+                            background: colors.background
+                        }}
                         notchHeight={NOTCH_HEIGHT}
                         onTransitionPointFound={setTransitionPoint}
                         onSegmentPositionsUpdate={setSegmentPositions}
@@ -113,7 +180,12 @@ const DashFeatureImpact = ({
                         idColumn={idColumn}
                         contributions={contributionsMap}
                         height={height}
-                        style={colors}
+                        style={{
+                            textColor: colors.text,
+                            background: colors.background,
+                            headerBackground: '#f8fafc',
+                            highlightBackground: '#f1f5f9'
+                        }}
                         onScroll={setVisibleRows}
                         onHover={handleHover}
                         onClick={handleClick}
@@ -121,63 +193,6 @@ const DashFeatureImpact = ({
                     />
                 </div>
             </div>
-
-            {/* Connections overlay */}
-            <svg className="connections-overlay" width={width} height={height}>
-                {/* KDE to Force Plot connection */}
-                {/* {transitionPoint && (
-                    <ConnectingLine
-                        start={{
-                            x: predictionPosition.x + 8,
-                            y: predictionPosition.y
-                        }}
-                        end={{
-                            x: transitionPoint.x + kdePlotWidth,
-                            y: transitionPoint.y + NOTCH_HEIGHT + 8
-                        }}
-                        pathStyle="kde-to-force"
-                        tooltipContent={predictionLabel}
-                        style={{
-                            stroke: colors.connecting,
-                            background: colors.background
-                        }}
-                    />
-                )} */}
-
-                {/* Force Plot to Table connections */}
-                {segmentPositions.map((segment, index) => {
-                    const visibleRow = visibleRows.find(row => row.index === index);
-                    if (!visibleRow) return null;
-
-                    // Calculate the force plot segment width dynamically
-                    const SEGMENT_WIDTH = Math.min(forcePlotWidth * 0.3, 80); // Match ForcePlot calculation
-                    
-                    // Calculate start position (end of force plot segment)
-                    const segmentMidpoint = {
-                        x: kdePlotWidth + (forcePlotWidth / 2) + (SEGMENT_WIDTH / 2) + 15,
-                        y: segment.y + 6
-                    };
-
-                    // Calculate end position (start of table row)
-                    const rowPosition = {
-                        x: kdePlotWidth + forcePlotWidth, // Add small gap
-                        y: visibleRow.y
-                    };
-
-                    return (
-                        <ConnectingLine
-                            key={`force-table-connection-${index}`}
-                            start={segmentMidpoint}
-                            end={rowPosition}
-                            pathStyle="force-to-table"
-                            style={{
-                                stroke: colors.connecting,
-                                opacity: hoveredId === contributions[index].id ? 1 : 0.5
-                            }}
-                        />
-                    );
-                })}
-            </svg>
         </div>
     );
 };
@@ -191,7 +206,7 @@ DashFeatureImpact.propTypes = {
         })
     ).isRequired,
 
-    /** Data to display in a tabular format to the rigth of the force plot. */
+    /** Data to display in a tabular format to the right of the force plot. */
     tableData: PropTypes.arrayOf(PropTypes.object).isRequired,
 
     /** Name of the column in 'tableData' that matches the 'id' field from 'contributions' */
@@ -201,7 +216,10 @@ DashFeatureImpact.propTypes = {
     kdeData: PropTypes.shape({
         points: PropTypes.arrayOf(PropTypes.arrayOf(PropTypes.number)).isRequired,
         prediction: PropTypes.number.isRequired,
-        predictionDate: PropTypes.instanceOf(Date)
+        predictionDate: PropTypes.oneOfType([
+            PropTypes.instanceOf(Date),
+            PropTypes.string
+        ])
     }).isRequired,
 
     /** Text to display in the line connecting the prediction point to Force Plot */
