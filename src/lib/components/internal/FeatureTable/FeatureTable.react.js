@@ -20,6 +20,7 @@ const FeatureTable = ({
     const tableBodyRef = React.useRef(null);
     const [columnWidths, setColumnWidths] = React.useState({});
     const [visibleRows, setVisibleRows] = React.useState([]);
+    const [scrollLeft, setScrollLeft] = React.useState(0);
 
     // Get all unique columns from data
     const columns = React.useMemo(() => {
@@ -49,38 +50,18 @@ const FeatureTable = ({
         setColumnWidths(widths);
     }, [columns, data]);
 
-    // Handle scroll events
-    // const handleScroll = () => {
-    //     if (!tableBodyRef.current) return;
-    
-    //     const tableBody = tableBodyRef.current;
-    //     const scrollTop = tableBody.scrollTop;
-    //     const clientHeight = tableBody.clientHeight;
-    //     const rowHeight = 40; // Assuming fixed row height
-    
-    //     // Calculate visible rows
-    //     const startIndex = Math.floor(scrollTop / rowHeight);
-    //     const endIndex = Math.ceil((scrollTop + clientHeight) / rowHeight);
-        
-    //     const visible = data
-    //         .slice(startIndex, endIndex + 1)
-    //         .map((row, index) => ({
-    //             index: startIndex + index,
-    //             y: (startIndex + index) * rowHeight + (rowHeight * 2), // Center of row
-    //             x: tableBody.getBoundingClientRect().left // Left edge of table
-    //         }));
-    
-    //     setVisibleRows(visible);
-    //     onScroll?.(visible);
-    // };
     const handleScroll = () => {
         if (!tableBodyRef.current) return;
     
         const tableBody = tableBodyRef.current;
         const scrollTop = tableBody.scrollTop;
+        const scrollLeftValue = tableBody.scrollLeft;
         const clientHeight = tableBody.clientHeight;
         const headerHeight = 48; // Height of the header
         const rowHeight = 42; // Height of each row
+
+        // Update horizontal scroll position for header sync
+        setScrollLeft(scrollLeftValue);
     
         // Calculate visible rows
         const startIndex = Math.floor(scrollTop / rowHeight);
@@ -130,7 +111,7 @@ const FeatureTable = ({
                 className="table-header"
                 style={{ 
                     color: style.textColor || '#333',
-                    background: style.headerBackground || '#f8fafc'
+                    transform: `translateX(-${scrollLeft}px)`
                 }}
             >
                 <div className="header-row">
@@ -140,7 +121,8 @@ const FeatureTable = ({
                             className="header-cell"
                             style={{ 
                                 width: columnWidths[column],
-                                minWidth: columnWidths[column]
+                                minWidth: columnWidths[column],
+                                background: style.headerBackground || '#f8fafc'
                             }}
                         >
                             {column}

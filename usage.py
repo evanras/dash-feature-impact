@@ -18,9 +18,9 @@ contributions = [
     {"id": "ur1", "value": 37.02},
     {"id": "gdp1", "value": 28.1},
     {"id": "aof1", "value": 20.80},
-    {"id": "ur2", "value": 0.65},
-    {"id": "ur3", "value": 0.6},
-    {"id": "ur4", "value": 0.06},
+    {"id": "ur2", "value": 16.4},
+    {"id": "ur3", "value": 12},
+    {"id": "ur4", "value": 6},
 ]
 
 # Sample table data with matching IDs
@@ -65,12 +65,12 @@ style = {
 }
 
 # Dimensions configuration
-width = 1200
+width = 600
 dimensions = {
     "width": width,
     "height": 400,
     "kdePlotWidth": width * 0.25,
-    "forcePlotWidth": width * 0.33,
+    "forcePlotWidth": width * 0.33,  # proportions other than these can cause breaks in lines 
     "margins": {
         "top": 20,
         "right": 30,

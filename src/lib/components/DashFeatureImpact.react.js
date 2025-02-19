@@ -147,13 +147,13 @@ const DashFeatureImpact = ({
                     
                     // Calculate start position (end of force plot segment)
                     const segmentMidpoint = {
-                        x: kdePlotWidth + (forcePlotWidth / 2) + (SEGMENT_WIDTH / 2),
-                        y: segment.y
+                        x: kdePlotWidth + (forcePlotWidth / 2) + (SEGMENT_WIDTH / 2) + 15,
+                        y: segment.y + 6
                     };
 
                     // Calculate end position (start of table row)
                     const rowPosition = {
-                        x: kdePlotWidth + forcePlotWidth + 20, // Add small gap
+                        x: kdePlotWidth + forcePlotWidth, // Add small gap
                         y: visibleRow.y
                     };
 
@@ -170,38 +170,6 @@ const DashFeatureImpact = ({
                         />
                     );
                 })}
-
-                {/* Force Plot to Table connections
-                {segmentPositions.map((segment, index) => {
-                    const visibleRow = visibleRows.find(row => row.index === index);
-                    const forceSegmentWidth = Math.min(forcePlotWidth * 0.3, 80) / 2; // same calculation
-                    if (!visibleRow) return null;
-
-                    // Calculate the correct midpoint of the segment including caret
-                    const segmentMidpoint = {
-                        x: kdePlotWidth + forcePlotWidth/2 + forceSegmentWidth + 15,  // Center of force plot
-                        y: segment.y  // Using the midpoint y-position provided by ForcePlot
-                    };
-
-                    // Calculate table row position
-                    const rowPosition = {
-                        x: kdePlotWidth + forcePlotWidth, // Start of table section
-                        y: visibleRow.y // Using the midpoint y-position provided by FeatureTable
-                    };
-
-                    return (
-                        <ConnectingLine
-                            key={`force-table-connection-${index}`}
-                            start={segmentMidpoint}
-                            end={rowPosition}
-                            pathStyle="force-to-table"
-                            style={{
-                                stroke: colors.connecting,
-                                opacity: hoveredId === contributions[index].id ? 1 : 0.5
-                            }}
-                        />
-                    );
-                })} */}
             </svg>
         </div>
     );
