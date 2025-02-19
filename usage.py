@@ -91,7 +91,7 @@ app.layout = html.Div([
     # html.H1("Feature Impact Visualization Example"),
     html.Div(
         children=[
-            html.Div("Hello there"),
+            # html.Div("Hello there"),
             dash_feature_impact.DashFeatureImpact(
                 # id='feature-impact-1',
                 contributions=contributions,

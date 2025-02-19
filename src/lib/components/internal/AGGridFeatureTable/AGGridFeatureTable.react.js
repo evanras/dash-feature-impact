@@ -1,8 +1,9 @@
 const React = require('react');
 const PropTypes = require('prop-types');
 const { AgGridReact } = require('ag-grid-react');
-const { AllCommunityModule, ModuleRegistry } = require('ag-grid-community');
+const { AllCommunityModule, ModuleRegistry, provideGlobalGridOptions } = require('ag-grid-community');
 ModuleRegistry.registerModules([AllCommunityModule]);
+provideGlobalGridOptions({ theme: "legacy"});
 
 // Import AG Grid styles
 require('ag-grid-community/styles/ag-grid.css');
@@ -304,10 +305,11 @@ const AGGridFeatureTable = React.forwardRef(({
                     }}
                     domLayout="normal"
                     animateRows={true}
-                    rowSelection={{
-                        mode: 'singleRow'
-                    }}
-                    suppressCellFocus={false}
+                    // rowSelection={{
+                    //     mode: 'singleRow',
+                    //     enableClickSelection: false,
+                    // }}
+                    suppressCellFocus={true}
                     enableCellTextSelection={true}
                     tooltipShowDelay={300}
                     {...gridOptions}
