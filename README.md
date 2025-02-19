@@ -4,8 +4,7 @@ Dash Feature Impact is a Dash component library.
 
 A Dash component library for visualizing machine learning feature importance and impact. Create intuitive, interactive visualizations that show how individual features contribute to model predictions. Includes force plot visualizations that display feature contributions alongside prediction distributions, helping users understand how each variable drives model outputs. Ideal for model interpretation, debugging, and explaining predictions to stakeholders.
 
-![image](https://github.com/user-attachments/assets/99315072-8ac7-4685-8c55-905ef9c52da2)
-
+https://github.com/user-attachments/assets/5dc67517-5120-4524-9a5e-455ff060d430
 
 Get started with:
 1. Install Dash and its dependencies: https://dash.plotly.com/installation
