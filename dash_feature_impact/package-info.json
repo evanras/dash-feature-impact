@@ -2,7 +2,7 @@
   "name": "dash_feature_impact",
   "version": "0.0.1",
   "description": "A Dash component library for visualizing machine learning feature importance and impact. Create intuitive, interactive visualizations that show how individual features contribute to model predictions. Includes force plot visualizations that display feature contributions alongside prediction distributions, helping users understand how each variable drives model outputs. Ideal for model interpretation, debugging, and explaining predictions to stakeholders.",
-"repository": {
+  "repository": {
     "type": "git",
     "url": "git://github.com/evanras/dash-feature-impact.git"
   },
@@ -24,7 +24,12 @@
   "author": "Evan Rasmussen <evanras@umich.edu>",
   "license": "MIT",
   "dependencies": {
-    "ramda": "^0.26.1"
+    "ag-grid-community": "^33.1.0",
+    "ag-grid-react": "^33.1.0",
+    "d3": "7.9.0",
+    "prop-types": "^15.8.1",
+    "ramda": "^0.26.1",
+    "recharts": "^2.15.1"
   },
   "devDependencies": {
     "@babel/core": "^7.22.1",
@@ -41,12 +46,13 @@
     "eslint-config-prettier": "^6.0.0",
     "eslint-plugin-import": "^2.18.0",
     "eslint-plugin-react": "^7.14.2",
+    "process": "^0.11.10",
     "prop-types": "^15.8.1",
     "react": "^16.8.6",
     "react-docgen": "^5.4.3",
     "react-dom": "^16.8.6",
     "style-loader": "^3.3.3",
-    "styled-jsx": "^3.2.1",
+    "styled-jsx": "^5.1.6",
     "webpack": "^5.84.1",
     "webpack-cli": "^5.1.1",
     "webpack-dev-server": "^4.15.0"
