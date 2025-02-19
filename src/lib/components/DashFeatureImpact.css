@@ -6,7 +6,8 @@
     overflow: hidden;
     /* Default fixed widths - adjusted in JS for consistency */
     --kde-width: 300px;
-    --force-width: 300px;
+    --force-width: 200px;
+    --table-width: 300px;
 }
 
 .visualization-grid {
@@ -33,10 +34,10 @@
 }
 
 .table-section {
-    flex: 1 1 0;
+    flex: 0 0 var(--table-width);
     position: relative;
     overflow: hidden;
-    min-width: 300px; /* Ensure minimum table width */
+    min-width: var(--table-width); 
 }
 
 .connections-overlay {

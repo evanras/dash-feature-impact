@@ -74,6 +74,7 @@ dimensions = {
     "height": 300,
     "kdePlotWidth": width * 0.25,
     "forcePlotWidth": width * 0.2,  # proportions other than these can cause breaks in lines 
+    "featureTableWidth": 600,
     "margins": {
         "top": 20,
         "right": 30,
@@ -96,9 +97,10 @@ app.layout = html.Div([
                 kdeData=kde_data,
                 predictionTooltip=f"Predicted value of {predict_val} on April 25th, 2024",
                 style=style,
-                # dimensions=dimensions
+                dimensions=dimensions
             ),
-        ]
+        ],
+        style={"height": "400px", "position": "relative"}
     ),
     # dash_feature_impact.DashFeatureImpact(
     #     # id='feature-impact-1',

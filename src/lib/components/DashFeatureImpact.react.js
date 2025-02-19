@@ -39,7 +39,8 @@ const DashFeatureImpact = ({
     const {
         height = 600,
         kdePlotWidth = 300,
-        forcePlotWidth = 400,
+        forcePlotWidth = 200,
+        featureTableWidth = 400,
         margins = {
             top: 20,
             right: 30,
@@ -51,14 +52,16 @@ const DashFeatureImpact = ({
     // Use fixed widths to maintain consistency
     const kdeWidth = kdePlotWidth;
     const forceWidth = forcePlotWidth;
+    const tableWidth = featureTableWidth;
     
     // Update CSS variables to match provided dimensions
     React.useEffect(() => {
         if (containerRef.current) {
             containerRef.current.style.setProperty('--kde-width', `${kdePlotWidth}px`);
             containerRef.current.style.setProperty('--force-width', `${forcePlotWidth}px`);
+            containerRef.current.style.setProperty('--table-width', `${featureTableWidth}px`)
         }
-    }, [kdePlotWidth, forcePlotWidth]);
+    }, [kdePlotWidth, forcePlotWidth, tableWidth]);
 
     // Get default styles
     const {
@@ -228,7 +231,7 @@ DashFeatureImpact.propTypes = {
     /** Style components */
     style: PropTypes.object,
 
-    /** Size configurations for components in the visual.  */
+    /** Size configurations for components in the visual. Dictionary with keys 'width', 'height', 'kdePlotWidth', 'forcePlotWidth', 'margins' */
     dimensions: PropTypes.object,
     onHover: PropTypes.func,
     onClick: PropTypes.func,

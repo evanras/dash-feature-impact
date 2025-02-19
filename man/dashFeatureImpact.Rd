@@ -21,7 +21,7 @@ those elements have the following types:
   - id (character; required)
   - value (numeric; required)s. The contributions of features. Dict with keys 'id' and 'value' where 'id' is expected to match the 'idColumn' in 'tableData'.}
 
-\item{dimensions}{Named list. Size configurations for components in the visual.}
+\item{dimensions}{Named list. Size configurations for components in the visual. Dictionary with keys 'width', 'height', 'kdePlotWidth', 'forcePlotWidth', 'margins'}
 
 \item{idColumn}{Character. Name of the column in 'tableData' that matches the 'id' field from 'contributions'}
 

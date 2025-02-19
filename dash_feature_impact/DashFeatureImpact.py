@@ -27,7 +27,9 @@ Keyword arguments:
     - value (number; required)
 
 - dimensions (dict; optional):
-    Size configurations for components in the visual.
+    Size configurations for components in the visual. Dictionary with
+    keys 'width', 'height', 'kdePlotWidth', 'forcePlotWidth',
+    'margins'.
 
 - idColumn (string; required):
     Name of the column in 'tableData' that matches the 'id' field from

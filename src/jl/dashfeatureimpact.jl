@@ -19,7 +19,7 @@ Keyword arguments:
 Those elements have the following types:
   - `id` (String; required)
   - `value` (Real; required)s
-- `dimensions` (Dict; optional): Size configurations for components in the visual.
+- `dimensions` (Dict; optional): Size configurations for components in the visual. Dictionary with keys 'width', 'height', 'kdePlotWidth', 'forcePlotWidth', 'margins'
 - `idColumn` (String; required): Name of the column in 'tableData' that matches the 'id' field from 'contributions'
 - `kdeData` (required): Data to build the KDE Plot from.. kdeData has the following type: lists containing elements 'points', 'prediction', 'predictionDate'.
 Those elements have the following types:
