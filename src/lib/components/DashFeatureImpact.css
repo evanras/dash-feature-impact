@@ -7,7 +7,7 @@
     /* Default fixed widths - adjusted in JS for consistency */
     --kde-width: 300px;
     --force-width: 200px;
-    --table-width: 300px;
+    --table-width: auto; /* Can be auto or specific px value */
 }
 
 .visualization-grid {
@@ -34,10 +34,11 @@
 }
 
 .table-section {
-    flex: 0 0 var(--table-width);
+    /* Dynamic flex based on table width - controlled in JS */
     position: relative;
     overflow: hidden;
-    min-width: var(--table-width); 
+    /* Default min-width that can be overridden in JS */
+    min-width: 300px;
 }
 
 .connections-overlay {
@@ -165,128 +166,6 @@
     filter: drop-shadow(0px 4px 6px rgba(0, 0, 0, 0.15));
 }
 
-/* FeatureTable */
-.feature-table-container {
-    display: flex;
-    flex-direction: column;
-    border: 1px solid #e2e8f0;
-    border-radius: 4px;
-    overflow: hidden;
-    width: 100%;
-    height: 100%;
-    position: relative; /* For positioning inner elements */
-}
-
-.table-header {
-    position: sticky;
-    top: 0;
-    z-index: 10;
-    width: fit-content;
-    min-width: 100%; /* Ensure header covers full width */
-}
-
-.header-row {
-    display: flex;
-    width: 100%;
-}
-
-.header-cell {
-    padding: 12px 16px;
-    font-weight: 600;
-    font-size: 14px;
-    border-bottom: 1px solid #e2e8f0;
-    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    flex: 1 0 auto; /* Allow growth but maintain size */
-}
-
-.table-body {
-    overflow-y: auto;
-    overflow-x: hidden; /* Prevent horizontal scroll in body */
-    min-height: 0;
-    width: 100%;
-    flex-grow: 1;
-}
-
-.table-row {
-    display: flex;
-    width: 100%; /* Make rows full width */
-    border-bottom: 1px solid #e2e8f0;
-    transition: background-color 0.2s;
-    cursor: pointer;
-}
-
-.table-row:hover {
-    background-color: #f8fafc;
-}
-
-.table-row.highlighted {
-    background-color: #f1f5f9;
-}
-
-.table-cell {
-    padding: 12px 16px;
-    font-size: 14px;
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    flex: 1 0 auto; /* Allow growth but maintain size */
-}
-
-.table-cell.id-column {
-    font-family: monospace;
-}
-
-/* Scrollbar styling */
-.table-body::-webkit-scrollbar {
-    width: 8px;
-    height: 8px;
-}
-
-.table-body::-webkit-scrollbar-track {
-    background: #f1f5f9;
-    border-radius: 4px;
-}
-
-.table-body::-webkit-scrollbar-thumb {
-    background: #cbd5e1;
-    border-radius: 4px;
-}
-
-.table-body::-webkit-scrollbar-thumb:hover {
-    background: #94a3b8;
-}
-
-/* Simpler responsive behavior - just provide horizontal scrolling */
-@media (max-width: 1200px) {
-    .dash-feature-impact {
-        overflow-x: auto;
-    }
-    
-    .visualization-grid {
-        width: max-content; /* Allow natural width */
-        min-width: 100%;
-    }
-    
-    /* Keep proportions consistent but allow for scrolling */
-    .kde-section, 
-    .force-section {
-        flex-shrink: 0;
-    }
-    
-    .table-section {
-        min-width: 300px;
-    }
-}
-
-@media (max-width: 768px) {
-    .segment-rect {
-        stroke-width: 0.5;
-    }
-}
-
 /**
  * Custom styles for AG Grid integration with DashFeatureImpact
  */
@@ -384,4 +263,32 @@
     padding: 40px;
     color: #64748b;
     font-style: italic;
+}
+
+/* Responsive behavior for different screen sizes */
+@media (max-width: 1200px) {
+    .dash-feature-impact {
+        overflow-x: auto;
+    }
+    
+    .visualization-grid {
+        width: max-content; /* Allow natural width */
+        min-width: 100%;
+    }
+    
+    /* Keep proportions consistent but allow for scrolling */
+    .kde-section, 
+    .force-section {
+        flex-shrink: 0;
+    }
+    
+    .table-section {
+        min-width: 300px;
+    }
+}
+
+@media (max-width: 768px) {
+    .segment-rect {
+        stroke-width: 0.5;
+    }
 }

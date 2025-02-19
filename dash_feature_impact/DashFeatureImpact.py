@@ -34,6 +34,8 @@ Keyword arguments:
 
     - forcePlotWidth (number; optional)
 
+    - tableWidth (number | a value equal to: 'auto'; optional)
+
     - margins (dict; optional)
 
         `margins` is a dict with keys:

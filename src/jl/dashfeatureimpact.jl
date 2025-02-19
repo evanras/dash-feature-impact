@@ -16,11 +16,12 @@ Keyword arguments:
 Those elements have the following types:
   - `id` (String; required)
   - `value` (Real; required)s
-- `dimensions` (optional): Size/dimension configuration. dimensions has the following type: lists containing elements 'height', 'kdePlotWidth', 'forcePlotWidth', 'margins'.
+- `dimensions` (optional): Size/dimension configuration. dimensions has the following type: lists containing elements 'height', 'kdePlotWidth', 'forcePlotWidth', 'tableWidth', 'margins'.
 Those elements have the following types:
   - `height` (Real; optional)
   - `kdePlotWidth` (Real; optional)
   - `forcePlotWidth` (Real; optional)
+  - `tableWidth` (Real | a value equal to: 'auto'; optional)
   - `margins` (optional): . margins has the following type: lists containing elements 'top', 'right', 'bottom', 'left'.
 Those elements have the following types:
   - `top` (Real; optional)

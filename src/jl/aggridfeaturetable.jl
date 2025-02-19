@@ -8,38 +8,38 @@ export aggridfeaturetable
 An AGGridFeatureTable component.
 AGGridFeatureTable Component
 
-Enhanced feature table implementation using AG Grid for advanced data display,
-with support for synchronized highlighting and programmatic scrolling.
+A feature-rich grid component that:
+1. Synchronizes bidirectionally with ForcePlot for highlighting
+2. Supports programmatic scrolling to specific rows
+3. Allows configurable width
 
 @param {Object[]} data - Array of data objects to display in the table
 @param {string} idColumn - Name of the column that serves as the unique identifier
 @param {Map} contributions - Map of feature IDs to contribution values
 @param {number} height - Height of the table container in pixels
-@param {Object} style - Styling configuration object
-@param {string} style.textColor - Color for table text
-@param {string} style.background - Background color for table body
-@param {string} style.headerBackground - Background color for table header
-@param {string} style.highlightBackground - Background color for highlighted rows
-@param {Function} onScroll - Callback fired when table scrolls with viewport info
-@param {Function} onHover - Callback fired when row is hovered, provides row ID
-@param {Function} onClick - Callback fired when row is clicked, provides row ID
-@param {string} hoveredId - ID of currently hovered row for highlighting
-@param {Object} gridOptions - Additional AG Grid options to pass through
+@param {number} width - Width of the table container (optional)
+@param {Object} style - Styling configuration
+@param {Function} onScroll - Callback when table scrolls, provides visible rows info
+@param {Function} onHover - Callback when row is hovered
+@param {Function} onClick - Callback when row is clicked
+@param {string} hoveredId - ID of currently hovered element
+@param {Object} gridOptions - Additional AG Grid options
 Keyword arguments:
-- `data` (Array of Dicts; required)
-- `gridOptions` (Dict; optional)
-- `height` (Real; optional)
-- `hoveredId` (String; optional)
-- `idColumn` (String; required)
-- `style` (optional): . style has the following type: lists containing elements 'textColor', 'background', 'headerBackground', 'highlightBackground'.
+- `data` (Array of Dicts; required): Array of data objects to display in the table
+- `gridOptions` (Dict; optional): Additional AG Grid options to pass through
+- `height` (Real; optional): Height of the table container in pixels
+- `hoveredId` (String; optional): ID of currently hovered row for highlighting
+- `idColumn` (String; required): Name of the column in tableData that matches the 'id' field from contributions
+- `style` (optional): Styling configuration. style has the following type: lists containing elements 'textColor', 'background', 'headerBackground', 'highlightBackground'.
 Those elements have the following types:
   - `textColor` (String; optional)
   - `background` (String; optional)
   - `headerBackground` (String; optional)
   - `highlightBackground` (String; optional)
+- `width` (Real | String; optional): Width of the table container (optional, defaults to 100%)
 """
 function aggridfeaturetable(; kwargs...)
-        available_props = Symbol[:data, :gridOptions, :height, :hoveredId, :idColumn, :style]
+        available_props = Symbol[:data, :gridOptions, :height, :hoveredId, :idColumn, :style, :width]
         wild_props = Symbol[]
         return Component("aggridfeaturetable", "AGGridFeatureTable", "dash_feature_impact", available_props, wild_props; kwargs...)
 end

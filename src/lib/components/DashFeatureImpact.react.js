@@ -37,7 +37,8 @@ const DashFeatureImpact = ({
     const {
         height: propHeight,
         kdePlotWidth = 300,
-        forcePlotWidth = 400,
+        forcePlotWidth = 200,
+        tableWidth = 'auto',
         margins = {
             top: 20,
             right: 30,
@@ -57,6 +58,8 @@ const DashFeatureImpact = ({
         if (containerRef.current) {
             containerRef.current.style.setProperty('--kde-width', `${kdePlotWidth}px`);
             containerRef.current.style.setProperty('--force-width', `${forcePlotWidth}px`);
+            containerRef.current.style.setProperty('--table-width', 
+                tableWidth === 'auto' ? 'auto' : `${tableWidth}px`);
             
             // Measure container if we're in a Dash wrapper
             const updateDimensions = () => {
@@ -82,7 +85,7 @@ const DashFeatureImpact = ({
                 resizeObserver.disconnect();
             };
         }
-    }, [kdePlotWidth, forcePlotWidth, propHeight]);
+    }, [kdePlotWidth, forcePlotWidth, tableWidth, propHeight]);
 
     // Get default styles
     const {
@@ -139,13 +142,25 @@ const DashFeatureImpact = ({
 
     /**
      * Handle updates to the prediction point position from KDE plot
-     * Preserves the original functionality
      * 
      * @param {Object} position - Position data from KDE plot
      */
     const setPredictionPosition = (position) => {
         // Implementation would go here if needed
     };
+
+    // Calculate table width 
+    const calculatedTableWidth = React.useMemo(() => {
+        if (tableWidth === 'auto') {
+            // When auto, it will fill remaining space via CSS
+            return 'auto';
+        } else if (typeof tableWidth === 'number') {
+            return tableWidth;
+        } else {
+            // Default width if not specified
+            return 300;
+        }
+    }, [tableWidth]);
 
     return (
         <div 
@@ -192,13 +207,20 @@ const DashFeatureImpact = ({
                     />
                 </div>
 
-                <div className="table-section">
+                <div 
+                    className="table-section"
+                    style={{
+                        flex: tableWidth === 'auto' ? '1 1 auto' : '0 0 auto',
+                        minWidth: tableWidth === 'auto' ? '300px' : `${tableWidth}px`
+                    }}
+                >
                     <AGGridFeatureTable 
                         ref={tableRef}
                         data={tableData}
                         idColumn={idColumn}
                         contributions={contributionsMap}
                         height={containerDimensions.height}
+                        width={calculatedTableWidth}
                         style={{
                             textColor: colors.text,
                             background: colors.background,
@@ -262,6 +284,10 @@ DashFeatureImpact.propTypes = {
         height: PropTypes.number,
         kdePlotWidth: PropTypes.number,
         forcePlotWidth: PropTypes.number,
+        tableWidth: PropTypes.oneOfType([
+            PropTypes.number,
+            PropTypes.oneOf(['auto'])
+        ]),
         margins: PropTypes.shape({
             top: PropTypes.number,
             right: PropTypes.number,

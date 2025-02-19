@@ -1,35 +1,37 @@
 const React = require('react');
 const PropTypes = require('prop-types');
 const { AgGridReact } = require('ag-grid-react');
+
+// Import AG Grid styles
 require('ag-grid-community/styles/ag-grid.css');
 require('ag-grid-community/styles/ag-theme-alpine.css');
 
 /**
  * AGGridFeatureTable Component
  * 
- * Enhanced feature table implementation using AG Grid for advanced data display,
- * with support for synchronized highlighting and programmatic scrolling.
+ * A feature-rich grid component that:
+ * 1. Synchronizes bidirectionally with ForcePlot for highlighting
+ * 2. Supports programmatic scrolling to specific rows
+ * 3. Allows configurable width
  * 
  * @param {Object[]} data - Array of data objects to display in the table
  * @param {string} idColumn - Name of the column that serves as the unique identifier
  * @param {Map} contributions - Map of feature IDs to contribution values
  * @param {number} height - Height of the table container in pixels
- * @param {Object} style - Styling configuration object
- * @param {string} style.textColor - Color for table text
- * @param {string} style.background - Background color for table body
- * @param {string} style.headerBackground - Background color for table header
- * @param {string} style.highlightBackground - Background color for highlighted rows
- * @param {Function} onScroll - Callback fired when table scrolls with viewport info
- * @param {Function} onHover - Callback fired when row is hovered, provides row ID
- * @param {Function} onClick - Callback fired when row is clicked, provides row ID
- * @param {string} hoveredId - ID of currently hovered row for highlighting
- * @param {Object} gridOptions - Additional AG Grid options to pass through
+ * @param {number} width - Width of the table container (optional)
+ * @param {Object} style - Styling configuration
+ * @param {Function} onScroll - Callback when table scrolls, provides visible rows info
+ * @param {Function} onHover - Callback when row is hovered
+ * @param {Function} onClick - Callback when row is clicked
+ * @param {string} hoveredId - ID of currently hovered element
+ * @param {Object} gridOptions - Additional AG Grid options
  */
 const AGGridFeatureTable = React.forwardRef(({
     data,
     idColumn,
     contributions,
     height,
+    width,
     style = {},
     onScroll,
     onHover,
@@ -38,255 +40,272 @@ const AGGridFeatureTable = React.forwardRef(({
     gridOptions = {}
 }, ref) => {
     const gridRef = React.useRef();
-    const [visibleRows, setVisibleRows] = React.useState([]);
-    const [pulsingRowId, setPulsingRowId] = React.useState(null);
+    const [highlightedRowId, setHighlightedRowId] = React.useState(null);
     
-    // Generate column definitions dynamically from data
+    // Automatically track when hoveredId changes from external components
+    React.useEffect(() => {
+        if (hoveredId !== null) {
+            setHighlightedRowId(hoveredId);
+            
+            // Only scroll to row if the hover came from outside (like ForcePlot)
+            // and the row isn't already visible
+            if (gridRef.current?.api) {
+                const api = gridRef.current.api;
+                const rowNode = api.getRowNode(hoveredId);
+                if (rowNode) {
+                    const rowIndex = rowNode.rowIndex;
+                    const firstVisibleRow = api.getFirstDisplayedRow();
+                    const lastVisibleRow = api.getLastDisplayedRow();
+                    
+                    // Check if row is not currently visible
+                    if (rowIndex < firstVisibleRow || rowIndex > lastVisibleRow) {
+                        api.ensureNodeVisible(rowNode, 'middle');
+                    }
+                }
+            }
+        } else {
+            setHighlightedRowId(null);
+        }
+    }, [hoveredId]);
+
+    // Generate column definitions dynamically from the data
     const columnDefs = React.useMemo(() => {
         if (!data || data.length === 0) return [];
         
-        // Get all unique column names
-        const columns = new Set();
-        data.forEach(row => {
-            Object.keys(row).forEach(key => columns.add(key));
-        });
-        
-        // Create column definitions
-        return Array.from(columns).map(field => {
-            // Check if this is a contribution column
-            const isContribution = field === 'contribution';
+        const sampleRow = data[0];
+        return Object.keys(sampleRow).map(field => {
+            const isIdColumn = field === idColumn;
+            const isNumeric = typeof sampleRow[field] === 'number';
             
-            // Basic column configuration
+            // Basic column definition
             const colDef = {
                 field,
-                headerName: field === idColumn ? 'ID' : field,
+                headerName: field,
                 sortable: true,
                 filter: true,
                 resizable: true,
-                minWidth: 100,
+                minWidth: 50,
                 flex: 1,
             };
             
-            // Add special formatting for ID column
-            if (field === idColumn) {
-                colDef.pinned = 'left';
-                colDef.cellClass = 'id-column';
-                colDef.minWidth = 120;
-            }
-            
-            // Add value formatter for numeric/contribution columns
-            colDef.valueFormatter = params => {
-                const value = params.value;
+            // Configure value formatting for numeric values
+            if (isNumeric) {
+                colDef.type = 'numericColumn';
                 
-                if (value === null || value === undefined) {
-                    return '-';
-                } 
-                
-                if (typeof value === 'number') {
-                    // Format contribution values with sign
-                    if (isContribution) {
-                        return `${value > 0 ? '+' : ''}${value.toFixed(2)}`;
-                    }
+                // For contribution column specifically
+                if (field === 'contribution') {
+                    colDef.cellStyle = params => {
+                        const value = params.value;
+                        if (value > 0) return { color: '#4299E1' };
+                        if (value < 0) return { color: '#F56565' };
+                        return null;
+                    };
                     
+                    colDef.valueFormatter = params => {
+                        if (params.value === null || params.value === undefined) return '-';
+                        return `${params.value > 0 ? '+' : ''}${params.value}`;
+                    };
+                } else if (Math.abs(sampleRow[field]) > 1000) {
                     // Format large numbers with commas
-                    if (value > 999) {
-                        return value.toLocaleString();
-                    }
-                    
-                    // Format other numbers with 2 decimals
-                    return value.toFixed(2);
+                    colDef.valueFormatter = params => {
+                        if (params.value === null || params.value === undefined) return '-';
+                        return params.value.toLocaleString();
+                    };
+                } else if (Number.isInteger(sampleRow[field])) {
+                    // Integer values - display as is
+                    colDef.valueFormatter = params => {
+                        if (params.value === null || params.value === undefined) return '-';
+                        return params.value.toString();
+                    };
+                } else {
+                    // Default number formatting with 2 decimal places
+                    colDef.valueFormatter = params => {
+                        if (params.value === null || params.value === undefined) return '-';
+                        return params.value;
+                    };
                 }
-                
-                return String(value);
-            };
+            }
             
             return colDef;
         });
     }, [data, idColumn]);
-    
-    // Custom cell renderer for contribution indicators (optional)
-    const contributionCellRenderer = React.useCallback((params) => {
-        const id = params.data[idColumn];
-        const contribution = contributions.get(id);
-        
-        if (contribution === undefined) return params.valueFormatted || params.value || '-';
-        
-        const isPositive = contribution > 0;
-        const indicator = isPositive ? '▲' : '▼';
-        const color = isPositive ? '#4299E1' : '#F56565';
-        
-        return (
-            <div>
-                <span>{params.valueFormatted || params.value || '-'}</span>
-                <span style={{ color, marginLeft: '5px' }}>{indicator}</span>
-            </div>
-        );
-    }, [contributions, idColumn]);
-    
-    // Get row class based on hover state
-    const getRowClass = React.useCallback((params) => {
-        const rowId = params.data[idColumn];
-        const classes = [];
-        
-        if (rowId === hoveredId) {
-            classes.push('highlighted-row');
-        }
-        
-        if (rowId === pulsingRowId) {
-            classes.push('highlight-pulse-row');
-        }
-        
-        return classes.join(' ');
-    }, [hoveredId, pulsingRowId, idColumn]);
-    
-    // Custom row style based on hover state
-    const getRowStyle = React.useCallback((params) => {
-        const rowId = params.data[idColumn];
-        
+
+    // Create row class rules for highlighting rows
+    const rowClassRules = React.useMemo(() => {
+        return {
+            'highlight-pulse-row': params => params.data && params.data[idColumn] === highlightedRowId
+        };
+    }, [highlightedRowId, idColumn]);
+
+    // Row styling based on hover state
+    const getRowStyle = React.useCallback(params => {
+        const rowId = params.data?.[idColumn];
         if (rowId === hoveredId) {
             return { 
                 background: style.highlightBackground || '#f1f5f9'
             };
         }
-        
-        return { 
-            background: style.background || '#ffffff'
-        };
+        return null;
     }, [hoveredId, style, idColumn]);
-    
-    // Handle cell click events
-    const handleCellClicked = React.useCallback((params) => {
-        if (onClick && params.data) {
-            onClick(params.data[idColumn]);
-        }
-    }, [onClick, idColumn]);
-    
-    // Handle mouse over events
-    const handleRowHovered = React.useCallback((event) => {
-        if (onHover && event.data) {
+
+    // Handle row hover events
+    const onRowMouseOver = React.useCallback(event => {
+        if (event.data && onHover) {
             onHover(event.data[idColumn]);
         }
     }, [onHover, idColumn]);
-    
-    // Handle mouse out events
-    const handleMouseOut = React.useCallback(() => {
+
+    // Handle row mouse out events
+    const onRowMouseOut = React.useCallback(() => {
         if (onHover) {
             onHover(null);
         }
     }, [onHover]);
-    
-    // Handle scroll events to determine visible rows
-    const handleBodyScroll = React.useCallback(({ api }) => {
-        if (!onScroll) return;
+
+    // Handle row click events
+    const onRowClicked = React.useCallback(event => {
+        if (event.data && onClick) {
+            onClick(event.data[idColumn]);
+        }
+    }, [onClick, idColumn]);
+
+    // Handle viewport changed to report visible rows
+    const onViewportChanged = React.useCallback(() => {
+        if (!gridRef.current?.api || !onScroll) return;
         
-        const rowHeight = api.getSizesForCurrentTheme().rowHeight;
-        const headerHeight = api.getHeaderHeight();
+        const api = gridRef.current.api;
+        const rowHeight = api.getRowHeight();
         const firstRow = api.getFirstDisplayedRow();
         const lastRow = api.getLastDisplayedRow();
         
         if (firstRow === null || lastRow === null) return;
         
-        // Calculate visible row info for connecting visualizations
-        const visible = [];
+        // Get visible rows information
+        const visibleRows = [];
         for (let i = firstRow; i <= lastRow; i++) {
             const rowNode = api.getDisplayedRowAtIndex(i);
-            if (rowNode) {
+            if (rowNode && rowNode.data) {
                 const rowTop = rowNode.rowIndex * rowHeight;
-                visible.push({
-                    index: rowNode.rowIndex,
+                visibleRows.push({
                     id: rowNode.data[idColumn],
-                    y: headerHeight + rowTop + (rowHeight / 2),
-                    // Approximate x position
-                    x: 0
+                    index: rowNode.rowIndex,
+                    y: rowTop + (rowHeight / 2)
                 });
             }
         }
         
-        setVisibleRows(visible);
-        onScroll(visible);
+        onScroll(visibleRows);
     }, [onScroll, idColumn]);
-    
-    // Update visible rows after initial render
-    React.useEffect(() => {
-        if (gridRef.current && gridRef.current.api) {
-            handleBodyScroll({ api: gridRef.current.api });
+
+    // Scroll to a specific row with animation
+    const scrollToRow = React.useCallback(id => {
+        if (!gridRef.current?.api) return;
+        
+        const api = gridRef.current.api;
+        
+        // First, ensure the row is loaded
+        const rowNode = api.getRowNode(id);
+        if (!rowNode) {
+            console.warn(`Row with ID ${id} not found`);
+            return;
         }
-    }, [data, handleBodyScroll]);
-    
-    /**
-     * Scrolls to a specific row by ID
-     * Used when a user clicks a segment in ForcePlot to navigate to the corresponding row
-     * 
-     * @param {string} id - ID of the row to scroll to
-     */
-    const scrollToRow = React.useCallback((id) => {
-        if (!gridRef.current || !gridRef.current.api) return;
         
-        // Find the row node by ID
-        const rowNode = gridRef.current.api.getRowNode(id);
-        if (!rowNode) return;
+        // Scroll to the row with animation
+        api.ensureNodeVisible(rowNode, 'middle');
         
-        // Scroll to the row with animation (center it in viewport)
-        gridRef.current.api.ensureNodeVisible(rowNode, 'middle');
+        // Highlight the row temporarily 
+        setHighlightedRowId(id);
+        setTimeout(() => setHighlightedRowId(null), 1500);
         
-        // Apply visual feedback
-        setPulsingRowId(id);
-        
-        // Optional: flash cells for additional feedback
-        gridRef.current.api.flashCells({
+        // Flash cells for additional feedback
+        api.flashCells({
             rowNodes: [rowNode],
-            columns: ['*'],
             flashDelay: 500,
             fadeDelay: 1000
         });
-        
-        // Clear pulsing effect after animation completes
-        setTimeout(() => {
-            setPulsingRowId(null);
-        }, 1500);
     }, []);
-    
-    // Expose methods to parent component
+
+    // First load and resize handler
+    React.useEffect(() => {
+        const handleFirstLoad = () => {
+            if (gridRef.current?.api) {
+                // Adjust all columns to fit content
+                gridRef.current.api.sizeColumnsToFit();
+                // Update visible rows info
+                onViewportChanged();
+            }
+        };
+
+        // Wait for grid to be ready
+        if (gridRef.current?.api) {
+            handleFirstLoad();
+        }
+
+        // Handle window resize
+        const handleResize = () => {
+            if (gridRef.current?.api) {
+                gridRef.current.api.sizeColumnsToFit();
+            }
+        };
+
+        window.addEventListener('resize', handleResize);
+        return () => window.removeEventListener('resize', handleResize);
+    }, [onViewportChanged]);
+
+    // Expose methods to parent via ref
     React.useImperativeHandle(ref, () => ({
         scrollToRow,
-        // Expose AG Grid API for advanced usage
         getApi: () => gridRef.current?.api,
         getColumnApi: () => gridRef.current?.columnApi
     }));
-    
+
     return (
-        <div className="ag-grid-feature-table" style={{ height, width: '100%' }}>
+        <div 
+            className="ag-grid-feature-table" 
+            style={{ 
+                height, 
+                width: width || '100%'
+            }}
+        >
             <div 
                 className="ag-theme-alpine" 
                 style={{ 
                     height: '100%', 
                     width: '100%',
                     '--ag-header-background-color': style.headerBackground || '#f8fafc',
-                    '--ag-odd-row-background-color': style.background || '#ffffff',
+                    '--ag-background-color': style.background || '#ffffff',
                     '--ag-header-foreground-color': style.textColor || '#333333',
                     '--ag-foreground-color': style.textColor || '#333333',
+                    '--ag-row-hover-color': style.highlightBackground || '#f1f5f9',
+                    '--ag-selected-row-background-color': style.highlightBackground || '#f1f5f9',
                 }}
             >
                 <AgGridReact
                     ref={gridRef}
                     rowData={data}
                     columnDefs={columnDefs}
+                    rowClassRules={rowClassRules}
+                    getRowStyle={getRowStyle}
+                    getRowId={params => params.data[idColumn]}
+                    onRowMouseOver={onRowMouseOver}
+                    onRowMouseOut={onRowMouseOut}
+                    onRowClicked={onRowClicked}
+                    onViewportChanged={onViewportChanged}
+                    onGridReady={params => {
+                        params.api.sizeColumnsToFit();
+                    }}
                     defaultColDef={{
                         sortable: true,
                         filter: true,
-                        resizable: true
+                        resizable: true,
+                        suppressMovable: false
                     }}
-                    getRowId={params => params.data[idColumn]}
-                    getRowClass={getRowClass}
-                    getRowStyle={getRowStyle}
-                    onCellClicked={handleCellClicked}
-                    onRowHovered={handleRowHovered}
-                    onMouseOut={handleMouseOut}
-                    onBodyScroll={handleBodyScroll}
+                    domLayout="normal"
                     animateRows={true}
                     rowSelection="single"
-                    enableCellTextSelection={true}
                     suppressCellFocus={false}
+                    enableCellTextSelection={true}
+                    tooltipShowDelay={300}
                     {...gridOptions}
                 />
             </div>
@@ -298,20 +317,42 @@ const AGGridFeatureTable = React.forwardRef(({
 AGGridFeatureTable.displayName = 'AGGridFeatureTable';
 
 AGGridFeatureTable.propTypes = {
+    /** Array of data objects to display in the table */
     data: PropTypes.arrayOf(PropTypes.object).isRequired,
+    
+    /** Name of the column in tableData that matches the 'id' field from contributions */
     idColumn: PropTypes.string.isRequired,
+    
+    /** Map of feature IDs to contribution values */
     contributions: PropTypes.instanceOf(Map).isRequired,
+    
+    /** Height of the table container in pixels */
     height: PropTypes.number,
+    
+    /** Width of the table container (optional, defaults to 100%) */
+    width: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
+    
+    /** Styling configuration */
     style: PropTypes.shape({
         textColor: PropTypes.string,
         background: PropTypes.string,
         headerBackground: PropTypes.string,
         highlightBackground: PropTypes.string
     }),
+    
+    /** Callback fired when table scrolls with viewport info */
     onScroll: PropTypes.func,
+    
+    /** Callback fired when row is hovered, provides row ID */
     onHover: PropTypes.func,
+    
+    /** Callback fired when row is clicked, provides row ID */
     onClick: PropTypes.func,
+    
+    /** ID of currently hovered row for highlighting */
     hoveredId: PropTypes.string,
+    
+    /** Additional AG Grid options to pass through */
     gridOptions: PropTypes.object
 };
 

@@ -21,11 +21,12 @@ those elements have the following types:
   - id (character; required)
   - value (numeric; required)s. The contributions of features. Array of objects with 'id' and 'value' fields}
 
-\item{dimensions}{Lists containing elements 'height', 'kdeplotwidth', 'forceplotwidth', 'margins'.
+\item{dimensions}{Lists containing elements 'height', 'kdeplotwidth', 'forceplotwidth', 'tablewidth', 'margins'.
 those elements have the following types:
   - height (numeric; optional)
   - kdeplotwidth (numeric; optional)
   - forceplotwidth (numeric; optional)
+  - tablewidth (numeric | a value equal to: 'auto'; optional)
   - margins (optional): . margins has the following type: lists containing elements 'top', 'right', 'bottom', 'left'.
 those elements have the following types:
   - top (numeric; optional)
