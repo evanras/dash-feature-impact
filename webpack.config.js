@@ -116,5 +116,5 @@ module.exports = (env, argv) => {
                 'process.env.VERSION': JSON.stringify(packagejson.version),
             })
         ]
-    }
+    };
 };

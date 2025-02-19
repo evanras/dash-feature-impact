@@ -1,6 +1,8 @@
 const React = require('react');
 const PropTypes = require('prop-types');
 const { AgGridReact } = require('ag-grid-react');
+const { AllCommunityModule, ModuleRegistry } = require('ag-grid-community');
+ModuleRegistry.registerModules([AllCommunityModule]);
 
 // Import AG Grid styles
 require('ag-grid-community/styles/ag-grid.css');
@@ -54,8 +56,8 @@ const AGGridFeatureTable = React.forwardRef(({
                 const rowNode = api.getRowNode(hoveredId);
                 if (rowNode) {
                     const rowIndex = rowNode.rowIndex;
-                    const firstVisibleRow = api.getFirstDisplayedRow();
-                    const lastVisibleRow = api.getLastDisplayedRow();
+                    const firstVisibleRow = api.getFirstDisplayedRowIndex();
+                    const lastVisibleRow = api.getLastDisplayedRowIndex();
                     
                     // Check if row is not currently visible
                     if (rowIndex < firstVisibleRow || rowIndex > lastVisibleRow) {
@@ -175,8 +177,8 @@ const AGGridFeatureTable = React.forwardRef(({
         
         const api = gridRef.current.api;
         const rowHeight = api.getRowHeight();
-        const firstRow = api.getFirstDisplayedRow();
-        const lastRow = api.getLastDisplayedRow();
+        const firstRow = api.getFirstDisplayedRowIndex();
+        const lastRow = api.getLastDisplayedRowIndex();
         
         if (firstRow === null || lastRow === null) return;
         
@@ -220,8 +222,8 @@ const AGGridFeatureTable = React.forwardRef(({
         // Flash cells for additional feedback
         api.flashCells({
             rowNodes: [rowNode],
-            flashDelay: 500,
-            fadeDelay: 1000
+            flashDuration: 500,
+            fadeDuration: 1000
         });
     }, []);
 
@@ -256,11 +258,11 @@ const AGGridFeatureTable = React.forwardRef(({
     React.useImperativeHandle(ref, () => ({
         scrollToRow,
         getApi: () => gridRef.current?.api,
-        getColumnApi: () => gridRef.current?.columnApi
+        getColumnApi: () => gridRef.current?.api
     }));
 
     return (
-        <div 
+        (<div 
             className="ag-grid-feature-table" 
             style={{ 
                 height, 
@@ -302,14 +304,16 @@ const AGGridFeatureTable = React.forwardRef(({
                     }}
                     domLayout="normal"
                     animateRows={true}
-                    rowSelection="single"
+                    rowSelection={{
+                        mode: 'singleRow'
+                    }}
                     suppressCellFocus={false}
                     enableCellTextSelection={true}
                     tooltipShowDelay={300}
                     {...gridOptions}
                 />
             </div>
-        </div>
+        </div>)
     );
 });
 

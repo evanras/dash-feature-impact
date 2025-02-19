@@ -24,8 +24,8 @@
   "author": "Evan Rasmussen <evanras@umich.edu>",
   "license": "MIT",
   "dependencies": {
-    "ag-grid-community": "^30.2.0",
-    "ag-grid-react": "^30.2.0",
+    "ag-grid-community": "^33.1.0",
+    "ag-grid-react": "^33.1.0",
     "d3": "7.9.0",
     "prop-types": "^15.8.1",
     "ramda": "^0.26.1",
