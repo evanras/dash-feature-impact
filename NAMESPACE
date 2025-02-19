@@ -1,10 +1,12 @@
 # AUTO GENERATED FILE - DO NOT EDIT
 
 export(DashFeatureImpact)
+export(AGGridFeatureTable)
 export(ConnectingLine)
 export(FeatureTable)
 export(ForcePlot)
 export(KDEPlot)
+export(aGGridFeatureTable)
 export(kDEPlot)
 export(featureTable)
 export(dashFeatureImpact)

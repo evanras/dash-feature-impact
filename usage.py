@@ -5,7 +5,10 @@ import numpy as np
 from datetime import datetime
 
 # Create the Dash app
-app = dash.Dash(__name__)
+app = dash.Dash(__name__, external_stylesheets=[
+        "https://cdn.jsdelivr.net/npm/ag-grid-community@30.0.0/styles/ag-grid.min.css",
+        "https://cdn.jsdelivr.net/npm/ag-grid-community@30.0.0/styles/ag-theme-alpine.min.css",
+    ])
 
 # Sample contributions data with IDs
 contributions = [

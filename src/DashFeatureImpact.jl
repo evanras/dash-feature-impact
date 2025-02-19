@@ -6,6 +6,7 @@ const resources_path = realpath(joinpath( @__DIR__, "..", "deps"))
 const version = "0.0.1"
 
 include("jl/dashfeatureimpact.jl")
+include("jl/aggridfeaturetable.jl")
 include("jl/connectingline.jl")
 include("jl/featuretable.jl")
 include("jl/forceplot.jl")

@@ -1,7 +1,7 @@
 const React = require('react');
 const PropTypes = require('prop-types');
 const ForcePlot = require('./internal/ForecePlot/ForcePlot.react');
-const FeatureTable = require('./internal/FeatureTable/FeatureTable.react');
+const AGGridFeatureTable = require('./internal/AGGridFeatureTable/AGGridFeatureTable.react');
 const KDEPlot = require('./internal/KDEPlot/KDEPlot.react');
 require('./DashFeatureImpact.css');
 
@@ -9,11 +9,8 @@ require('./DashFeatureImpact.css');
  * DashFeatureImpact Component
  * 
  * Main component for visualizing feature impacts from machine learning models.
- * Provides a responsive layout combining KDE plot, force plot, and feature table
- * with connecting elements for interactive data exploration.
- * 
- * The component maintains consistent visual relationships between plots while
- * adapting to different screen sizes through horizontal scrolling when needed.
+ * Combines KDE plot, force plot, and AG Grid table with a responsive layout.
+ * Provides interactive features including hover synchronization and auto-scrolling.
  */
 const DashFeatureImpact = ({
     contributions,
@@ -25,22 +22,22 @@ const DashFeatureImpact = ({
     predictionTooltip,
     onHover,
     onClick,
+    gridOptions = {},
     setProps
 }) => {
+    const tableRef = React.useRef(null);
     const [transitionPoint, setTransitionPoint] = React.useState(null);
     const [segmentPositions, setSegmentPositions] = React.useState([]);
     const [visibleRows, setVisibleRows] = React.useState([]);
     const [hoveredId, setHoveredId] = React.useState(null);
-    // We don't need to track container width since we're using fixed widths
     const containerRef = React.useRef(null);
     const NOTCH_HEIGHT = 15;
 
-    // Get dimensions with simpler handling
+    // Adjust component dimensions based on props or container
     const {
-        height = 600,
+        height: propHeight,
         kdePlotWidth = 300,
-        forcePlotWidth = 200,
-        featureTableWidth = 400,
+        forcePlotWidth = 400,
         margins = {
             top: 20,
             right: 30,
@@ -49,40 +46,57 @@ const DashFeatureImpact = ({
         }
     } = dimensions;
 
-    // Use fixed widths to maintain consistency
-    const kdeWidth = kdePlotWidth;
-    const forceWidth = forcePlotWidth;
-    const tableWidth = featureTableWidth;
+    // Use container ref to fit to parent element
+    const [containerDimensions, setContainerDimensions] = React.useState({
+        height: propHeight || 600,
+        width: 0
+    });
     
     // Update CSS variables to match provided dimensions
     React.useEffect(() => {
         if (containerRef.current) {
             containerRef.current.style.setProperty('--kde-width', `${kdePlotWidth}px`);
             containerRef.current.style.setProperty('--force-width', `${forcePlotWidth}px`);
-            containerRef.current.style.setProperty('--table-width', `${featureTableWidth}px`)
+            
+            // Measure container if we're in a Dash wrapper
+            const updateDimensions = () => {
+                const parent = containerRef.current.parentElement;
+                if (parent) {
+                    setContainerDimensions({
+                        height: propHeight || parent.clientHeight,
+                        width: parent.clientWidth
+                    });
+                }
+            };
+            
+            updateDimensions();
+            
+            // Set up resize observer for Dash integration
+            const resizeObserver = new ResizeObserver(updateDimensions);
+            resizeObserver.observe(containerRef.current.parentElement);
+            
+            return () => {
+                if (containerRef.current && containerRef.current.parentElement) {
+                    resizeObserver.unobserve(containerRef.current.parentElement);
+                }
+                resizeObserver.disconnect();
+            };
         }
-    }, [kdePlotWidth, forcePlotWidth, tableWidth]);
+    }, [kdePlotWidth, forcePlotWidth, propHeight]);
 
     // Get default styles
     const {
         colors = {
-            positive: '#b4d9ff',
-            negative: '#ffb4b4',
-            connecting: '#666',
-            background: '#fff',
-            text: '#333'
+            positive: '#4299E1',
+            negative: '#F56565',
+            connecting: '#666666',
+            background: '#FFFFFF',
+            text: '#333333',
+            predictionColor: '#666666'
         }
     } = style;
 
-    /**
-     * Create contributions map for efficient lookup by ID
-     * 
-     * Transforms the contributions array into a Map where:
-     * - Keys are feature IDs
-     * - Values are the corresponding contribution values
-     * 
-     * This improves performance when checking contributions in the table
-     */
+    // Create contributions map for efficient lookup
     const contributionsMap = React.useMemo(() => {
         return new Map(contributions.map(c => [c.id, c.value]));
     }, [contributions]);
@@ -106,8 +120,8 @@ const DashFeatureImpact = ({
     /**
      * Handle click interactions across all visualization components
      * 
-     * Triggers the onClick callback with the full contribution object
-     * for the clicked element
+     * 1. Triggers the onClick callback with the full contribution object
+     * 2. Scrolls the AG Grid table to the corresponding row
      * 
      * @param {string} id - ID of the clicked element
      */
@@ -116,19 +130,20 @@ const DashFeatureImpact = ({
             const contribution = contributions.find(c => c.id === id);
             onClick(contribution);
         }
+        
+        // Scroll to the corresponding row in the table
+        if (tableRef.current && tableRef.current.scrollToRow) {
+            tableRef.current.scrollToRow(id);
+        }
     };
-
-    // We no longer need complex resize monitoring since we're using fixed widths
-    // and horizontal scrolling for responsiveness
 
     /**
      * Handle updates to the prediction point position from KDE plot
-     * Preserves the original functionality while fixing variable naming
+     * Preserves the original functionality
      * 
      * @param {Object} position - Position data from KDE plot
      */
     const setPredictionPosition = (position) => {
-        // Original function stub preserved
         // Implementation would go here if needed
     };
 
@@ -136,21 +151,21 @@ const DashFeatureImpact = ({
         <div 
             className="dash-feature-impact" 
             ref={containerRef}
-            style={{ height }}
+            style={{ height: propHeight }}
         >
             <div className="visualization-grid">
                 <div className="kde-section">
                     <KDEPlot 
                         data={kdeData}
-                        width={kdeWidth}
-                        height={height}
+                        width={kdePlotWidth}
+                        height={containerDimensions.height}
                         predictionTooltip={predictionTooltip}
                         onPredictionPointFound={setPredictionPosition}
                         margins={margins}
                         style={{
                             areaColor: colors.positive,
                             areaStroke: colors.connecting,
-                            predictionColor: colors.connecting,
+                            predictionColor: colors.predictionColor || colors.connecting,
                             gridColor: '#e2e8f0',
                             textColor: colors.text,
                             background: colors.background
@@ -161,8 +176,8 @@ const DashFeatureImpact = ({
                 <div className="force-section">
                     <ForcePlot 
                         data={contributions}
-                        width={forceWidth}
-                        height={height}
+                        width={forcePlotWidth}
+                        height={containerDimensions.height}
                         style={{
                             positive: colors.positive,
                             negative: colors.negative,
@@ -178,11 +193,12 @@ const DashFeatureImpact = ({
                 </div>
 
                 <div className="table-section">
-                    <FeatureTable 
+                    <AGGridFeatureTable 
+                        ref={tableRef}
                         data={tableData}
                         idColumn={idColumn}
                         contributions={contributionsMap}
-                        height={height}
+                        height={containerDimensions.height}
                         style={{
                             textColor: colors.text,
                             background: colors.background,
@@ -193,6 +209,7 @@ const DashFeatureImpact = ({
                         onHover={handleHover}
                         onClick={handleClick}
                         hoveredId={hoveredId}
+                        gridOptions={gridOptions}
                     />
                 </div>
             </div>
@@ -201,7 +218,7 @@ const DashFeatureImpact = ({
 };
 
 DashFeatureImpact.propTypes = {
-    /** The contributions of features. Dict with keys 'id' and 'value' where 'id' is expected to match the 'idColumn' in 'tableData'. */
+    /** The contributions of features. Array of objects with 'id' and 'value' fields */
     contributions: PropTypes.arrayOf(
         PropTypes.shape({
             id: PropTypes.string.isRequired,
@@ -209,13 +226,13 @@ DashFeatureImpact.propTypes = {
         })
     ).isRequired,
 
-    /** Data to display in a tabular format to the right of the force plot. */
+    /** Data to display in table format. Must include the column specified by idColumn */
     tableData: PropTypes.arrayOf(PropTypes.object).isRequired,
 
-    /** Name of the column in 'tableData' that matches the 'id' field from 'contributions' */
+    /** Name of the column in tableData that matches the 'id' field from contributions */
     idColumn: PropTypes.string.isRequired,
 
-    /** Data to build the KDE Plot from. */
+    /** Data to build the KDE Plot visualization */
     kdeData: PropTypes.shape({
         points: PropTypes.arrayOf(PropTypes.arrayOf(PropTypes.number)).isRequired,
         prediction: PropTypes.number.isRequired,
@@ -225,18 +242,44 @@ DashFeatureImpact.propTypes = {
         ])
     }).isRequired,
 
-    /** Text to display in the line connecting the prediction point to Force Plot */
+    /** Text to display in the tooltip for the prediction point */
     predictionTooltip: PropTypes.string,
 
-    /** Style components */
-    style: PropTypes.object,
+    /** Styling configuration */
+    style: PropTypes.shape({
+        colors: PropTypes.shape({
+            positive: PropTypes.string,
+            negative: PropTypes.string,
+            connecting: PropTypes.string,
+            background: PropTypes.string,
+            text: PropTypes.string,
+            predictionColor: PropTypes.string
+        })
+    }),
 
-    /** Size configurations for components in the visual. Dictionary with keys 'width', 'height', 'kdePlotWidth', 'forcePlotWidth', 'margins' */
-    dimensions: PropTypes.object,
+    /** Size/dimension configuration */
+    dimensions: PropTypes.shape({
+        height: PropTypes.number,
+        kdePlotWidth: PropTypes.number,
+        forcePlotWidth: PropTypes.number,
+        margins: PropTypes.shape({
+            top: PropTypes.number,
+            right: PropTypes.number,
+            bottom: PropTypes.number,
+            left: PropTypes.number
+        })
+    }),
+
+    /** Additional options to pass directly to AG Grid */
+    gridOptions: PropTypes.object,
+
+    /** Callback when a feature is hovered */
     onHover: PropTypes.func,
+    
+    /** Callback when a feature is clicked */
     onClick: PropTypes.func,
 
-    /** Optional Dash callback property */
+    /** Dash callback property */
     setProps: PropTypes.func
 };
 
