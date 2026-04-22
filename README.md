@@ -2,6 +2,8 @@
 
 Dash Feature Impact is a Dash component library.
 
+[![PyPI Downloads](https://static.pepy.tech/personalized-badge/dash-feature-impact?period=total&units=INTERNATIONAL_SYSTEM&left_color=BLACK&right_color=GREEN&left_text=downloads)](https://pepy.tech/projects/dash-feature-impact)
+
 A Dash component library for visualizing machine learning feature importance and impact. Create intuitive, interactive visualizations that show how individual features contribute to model predictions. Includes force plot visualizations that display feature contributions alongside prediction distributions, helping users understand how each variable drives model outputs. Ideal for model interpretation, debugging, and explaining predictions to stakeholders.
 
 https://github.com/user-attachments/assets/5dc67517-5120-4524-9a5e-455ff060d430
